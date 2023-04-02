@@ -1,6 +1,6 @@
 namespace QA_Auto_BankApp;
 
-public class PaymentCard
+public abstract class PaymentCard
 {
     public string CardName { get; }
     public long CardNumber { get; }
@@ -19,6 +19,8 @@ public class PaymentCard
         ExpirationDate = new ExpirationDate();
         UserInfo = userInfo;
     }
+
+    public abstract bool MakePayment(float sum);
 
     public override string ToString()
     {
