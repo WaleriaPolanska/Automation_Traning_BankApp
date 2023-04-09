@@ -2,26 +2,23 @@ namespace QA_Auto_BankApp;
 
 public abstract class PaymentCard
 {
-    public string CardName { get; }
+    public string PaymentMethodName { get; }
     public long CardNumber { get; }
     public ExpirationDate ExpirationDate { get; }
     public string ClientName { get; }
     public int CVV { get; }
 
-    public UserInfo UserInfo { get; }
+    public static UserInfo UserInfo { get; set; }
 
-    public PaymentCard(string nameOfCard, long numberOfCard, int codeCVV, UserInfo userInfo)
+    public PaymentCard(string nameOfPaymentMethod, long numberOfCard, int codeCVV, UserInfo userInfo)
     {
-        CardName = nameOfCard;
+        PaymentMethodName = nameOfPaymentMethod;
         CardNumber = numberOfCard;
         ClientName = userInfo.Name + " " + userInfo.LastName;
         CVV = codeCVV;
         ExpirationDate = new ExpirationDate();
         UserInfo = userInfo;
     }
-
-    public abstract bool MakePayment(float sum);
-
     public override string ToString()
     {
         return $"Client Name: {ClientName}\nCard Number: {CardNumber}\nExpiration Date: {ExpirationDate}\nCVV: {CVV}\n";
@@ -30,7 +27,7 @@ public abstract class PaymentCard
     public void GetCardInfo(string cardInfo)
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Card Name: {CardName}");
+        Console.WriteLine($"Payment Metod: {PaymentMethodName}");
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine(cardInfo);
         Console.ForegroundColor = ConsoleColor.Green;

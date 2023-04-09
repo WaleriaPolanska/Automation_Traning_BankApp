@@ -1,22 +1,23 @@
 namespace QA_Auto_BankApp;
 
-public class DebitCard : PaymentCard
+public class DebitCard : PaymentCard, IPayment
 {
-    public double Interest { get; set; }
+    public float Interest { get; set; }
     public float Debit { get; set; }
+    
+    private IPayment _paymentImplementation;
 
-
-    public DebitCard(string nameOfCard, long numberOfCard, int codeCVV, UserInfo userInfo, double interest,
-        float debit) : base(nameOfCard, numberOfCard, codeCVV, userInfo)
+    public DebitCard(string nameOfPaymentMethod, long numberOfCard, int codeCVV, UserInfo userInfo, float interest,
+        float debit) : base(nameOfPaymentMethod, numberOfCard, codeCVV, userInfo)
 
     {
         Interest = interest;
         Debit = debit;
     }
 
-    public override bool MakePayment(float sum)
+    public bool MakePayment(float sum)
     {
-        if (Debit >= sum)
+        if (IPayment.IsCanPay(sum, Debit))
         {
             Debit -= sum;
             
@@ -24,6 +25,16 @@ public class DebitCard : PaymentCard
         }
 
         return false;
+    }
+    
+    public void TopUp(float amount)
+    {
+        Debit += amount + amount * Interest / 100;
+    }
+
+    public float GetBalance()
+    {
+        return Debit;
     }
 
     public override string ToString()

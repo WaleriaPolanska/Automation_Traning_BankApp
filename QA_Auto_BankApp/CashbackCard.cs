@@ -1,22 +1,22 @@
 namespace QA_Auto_BankApp;
 
-public class CashbackCard : PaymentCard
+public class CashbackCard : PaymentCard, IPayment
 {
     public float Interest { get; set; }
     public float Balance { get; set; }
 
 
-    public CashbackCard(string nameOfCard, long numberOfCard, int codeCVV, UserInfo userInfo, float interest,
-        float balance) : base(nameOfCard, numberOfCard, codeCVV, userInfo)
+    public CashbackCard(string nameOfPaymentMethod, long numberOfCard, int codeCVV, UserInfo userInfo, float interest,
+        float balance) : base(nameOfPaymentMethod, numberOfCard, codeCVV, userInfo)
 
     {
         Interest = interest;
         Balance = balance;
     }
 
-    public override bool MakePayment(float sum)
+    public bool MakePayment(float sum)
     {
-        if (Balance >= sum)
+        if (IPayment.IsCanPay(sum, Balance))
         {
             Balance = (Balance - sum) + sum * Interest / 100F;
             
@@ -24,6 +24,16 @@ public class CashbackCard : PaymentCard
         }
 
         return false;
+    }
+
+    public void TopUp(float amount)
+    {
+        Balance += amount;
+    }
+
+    public float GetBalance()
+    {
+        return Balance;
     }
 
     public override string ToString()
