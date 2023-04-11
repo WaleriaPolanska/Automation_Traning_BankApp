@@ -1,6 +1,6 @@
 namespace QA_Auto_BankApp;
 
-public class CashbackCard : PaymentCard, IPayment
+public class CashbackCard : PaymentCard
 {
     public float Interest { get; set; }
     public float Balance { get; set; }
@@ -14,7 +14,7 @@ public class CashbackCard : PaymentCard, IPayment
         Balance = balance;
     }
 
-    public bool MakePayment(float sum)
+    public override bool MakePayment(float sum)
     {
         if (IPayment.IsCanPay(sum, Balance))
         {
@@ -26,12 +26,12 @@ public class CashbackCard : PaymentCard, IPayment
         return false;
     }
 
-    public void TopUp(float amount)
+    public override void TopUp(float amount)
     {
         Balance += amount;
     }
 
-    public float GetBalance()
+    public override float GetBalance()
     {
         return Balance;
     }

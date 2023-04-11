@@ -1,6 +1,6 @@
 namespace QA_Auto_BankApp;
 
-public class DebitCard : PaymentCard, IPayment
+public class DebitCard : PaymentCard
 {
     public float Interest { get; set; }
     public float Debit { get; set; }
@@ -15,7 +15,7 @@ public class DebitCard : PaymentCard, IPayment
         Debit = debit;
     }
 
-    public bool MakePayment(float sum)
+    public override bool MakePayment(float sum)
     {
         if (IPayment.IsCanPay(sum, Debit))
         {
@@ -27,12 +27,12 @@ public class DebitCard : PaymentCard, IPayment
         return false;
     }
     
-    public void TopUp(float amount)
+    public override void TopUp(float amount)
     {
         Debit += amount + amount * Interest / 100;
     }
 
-    public float GetBalance()
+    public override float GetBalance()
     {
         return Debit;
     }

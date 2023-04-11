@@ -1,6 +1,6 @@
 namespace QA_Auto_BankApp;
 
-public class CreditCard : PaymentCard, IPayment
+public class CreditCard : PaymentCard
 {
     public float CreditPercentage { get; }
     public float CreditLimit { get; set; }
@@ -14,7 +14,7 @@ public class CreditCard : PaymentCard, IPayment
         CreditLimit = creditLimit;
     }
 
-    public bool MakePayment(float sum)
+    public override bool MakePayment(float sum)
     {
         float sumWithPercentage = sum + (sum * CreditPercentage) / 100F;
         
@@ -28,12 +28,12 @@ public class CreditCard : PaymentCard, IPayment
         return false;
     }
 
-    public void TopUp(float amount)
+    public override void TopUp(float amount)
     {
         CreditLimit += amount;
     }
 
-    public float GetBalance()
+    public override float GetBalance()
     {
         return CreditLimit;
     }

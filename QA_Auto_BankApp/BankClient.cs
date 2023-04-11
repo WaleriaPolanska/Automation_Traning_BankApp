@@ -2,38 +2,74 @@ namespace QA_Auto_BankApp;
 
 public class BankClient
 {
-    public UserInfo UserInfo { get; }
+    private static List<string> _paymentMethodsTypesQueue =
+        new() {"Cash", "CashbackCard", "DebitCard", "CreditCard", "BitCoin"};
     
-    public List<IPayment> PaymentMethods { get; }
+    public UserInfo UserInfo { get; }
 
-    public BankClient(UserInfo userInfo, List<IPayment> paymentMethods)
+    private Dictionary<string, List<IPayment>> _paymentMethodsByName { get; }
+
+    public BankClient(UserInfo userInfo)
     {
         UserInfo = userInfo;
-        PaymentMethods = paymentMethods;
+        _paymentMethodsByName = new Dictionary<string, List<IPayment>>();
+    }
+
+    public void AddPaymentMethod(string paymentMethodType, IPayment paymentMethod)
+    {
+        if (!_paymentMethodsTypesQueue.Contains(paymentMethodType))
+        {
+            return;
+        }
+        
+        if (!_paymentMethodsByName.ContainsKey(paymentMethodType))
+        {
+            _paymentMethodsByName.Add(paymentMethodType, new List<IPayment>());
+        }
+        
+        _paymentMethodsByName[paymentMethodType].Add(paymentMethod);
+    }
+
+    public void TopUpPaymentMethod(string paymentMethodType, string name, float amount)
+    {
+        if (_paymentMethodsByName.ContainsKey(paymentMethodType))
+        {
+            var paymentMethods = _paymentMethodsByName[paymentMethodType];
+            var paymentMethod = paymentMethods.FirstOrDefault(x => x.Name == name);
+
+            paymentMethod?.TopUp(amount);
+        }
     }
 
     public bool Pay(float sum)
     {
-        foreach (var paymentMethod in PaymentMethods)
+        foreach (var paymentMethodType in _paymentMethodsTypesQueue)
         {
-            if (paymentMethod is Cash cash && cash.MakePayment(sum)
-                ||paymentMethod is CashbackCard cashbackCard && cashbackCard.MakePayment(sum)
-                || paymentMethod is DebitCard debitCard && debitCard.MakePayment(sum)
-                || paymentMethod is CreditCard creditCard && creditCard.MakePayment(sum)
-                || paymentMethod is BitCoin bitCoin && bitCoin.MakePayment(sum))
+            if (_paymentMethodsByName.ContainsKey(paymentMethodType))
             {
-                return true;
+                var paymentMethods = _paymentMethodsByName[paymentMethodType];
+
+                foreach (var paymentMethod in paymentMethods)
+                {
+                    if (paymentMethod.MakePayment(sum))
+                    {
+                        return true;
+                    }
+                }   
             }
         }
-        
+
         return false;
     }
 
     public void OutputBalances()
     {
-        foreach (var paymentMethod in PaymentMethods)
+        foreach (var (_, paymentMethods) in _paymentMethodsByName)
         {
-            Console.WriteLine($"{paymentMethod.PaymentMethodName} - {paymentMethod.GetBalance()}");
+            foreach (var paymentMethod in paymentMethods)
+            {
+                Console.WriteLine($"{paymentMethod.Name} - {paymentMethod.GetBalance()}");   
+            }
         }
     }
 }

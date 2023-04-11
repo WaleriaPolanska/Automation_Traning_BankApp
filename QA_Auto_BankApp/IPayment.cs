@@ -2,7 +2,8 @@ namespace QA_Auto_BankApp;
 
 public interface IPayment
 {
-    public string PaymentMethodName { get; }
+    public string Name { get; }
+    
     public bool MakePayment(float amount);
 
     public void TopUp(float amount);

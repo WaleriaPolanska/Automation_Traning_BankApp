@@ -2,12 +2,12 @@ namespace QA_Auto_BankApp;
 
 public class Cash : IPayment
 {
-    public string PaymentMethodName { get; }
+    public string Name { get; }
     public float Amount { get; set; }
 
     public Cash(string paymentMethodName, float cashAmount)
     {
-        PaymentMethodName = paymentMethodName;
+        Name = paymentMethodName;
         Amount = cashAmount;
     }
 

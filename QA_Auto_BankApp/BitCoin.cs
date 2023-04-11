@@ -2,14 +2,14 @@ namespace QA_Auto_BankApp;
 
 public class BitCoin : IPayment
 {
-    public string PaymentMethodName { get; }
+    public string Name { get; }
     public float Balance { get; set; }
 
     public float ExchangeRate { get; set; }
 
     public BitCoin(string paymentMethodName, float exchangeRate, float bitCoinAmount)
     {
-        PaymentMethodName = paymentMethodName;
+        Name = paymentMethodName;
         Balance = bitCoinAmount;
         ExchangeRate = exchangeRate;
     }

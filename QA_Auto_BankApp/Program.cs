@@ -27,11 +27,19 @@
                 123, userInfo, 5.8F, 850);
             var paymentMethod6 = new Cash("Cash", 100);
             var paymentMethod7 = new BitCoin("BTC", 20000, 0.5f);
+            
+            BankClient bankClient = new BankClient(userInfo);
+            
+            bankClient.AddPaymentMethod("DebitCard", paymentMethod1);
+            bankClient.AddPaymentMethod("DebitCard", paymentMethod2);
+            bankClient.AddPaymentMethod("CashbackCard", paymentMethod3);
+            bankClient.AddPaymentMethod("CreditCard", paymentMethod4);
+            bankClient.AddPaymentMethod("CreditCard", paymentMethod5);
+            bankClient.AddPaymentMethod("Cash", paymentMethod6);
+            bankClient.AddPaymentMethod("BitCoin", paymentMethod7);
 
-            List<IPayment> paymentMethods = new List<IPayment> {paymentMethod1, paymentMethod2, paymentMethod3, 
-                paymentMethod4, paymentMethod5, paymentMethod6, paymentMethod7};
-            BankClient bankClient = new BankClient(userInfo, paymentMethods);
-
+            bankClient.TopUpPaymentMethod("DebitCard", "DebitCard1", 200);
+            
             foreach (var product in products)
             {
                 bankClient.Pay(product.Price);
