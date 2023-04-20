@@ -1,4 +1,4 @@
-namespace QA_Auto_BankApp;
+namespace QA_Auto_BankApp.Models.BankClientInfo;
 
 public class Address
 {

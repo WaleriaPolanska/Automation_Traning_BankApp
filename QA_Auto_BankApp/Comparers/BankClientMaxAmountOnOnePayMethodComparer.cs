@@ -1,6 +1,6 @@
 using QA_Auto_BankApp.Models;
 
-namespace QA_Auto_BankApp;
+namespace QA_Auto_BankApp.Comparers;
 
 public class BankClientMaxAmountOnOnePayMethodComparer : IComparer<BankClient>
 {

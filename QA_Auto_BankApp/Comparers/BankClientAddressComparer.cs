@@ -1,8 +1,8 @@
 using QA_Auto_BankApp.Models;
 
-namespace QA_Auto_BankApp;
+namespace QA_Auto_BankApp.Comparers;
 
-public class BankClientAdressComparer : IComparer<BankClient>
+public class BankClientAddressComparer : IComparer<BankClient>
 {
     public int Compare(BankClient? x, BankClient? y)
     {

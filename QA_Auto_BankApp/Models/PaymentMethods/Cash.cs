@@ -1,4 +1,6 @@
-namespace QA_Auto_BankApp;
+using QA_Auto_BankApp.Interfaces;
+
+namespace QA_Auto_BankApp.Models.PaymentMethods;
 
 public class Cash : IPayment
 {

@@ -1,4 +1,9 @@
-﻿namespace QA_Auto_BankApp
+﻿using QA_Auto_BankApp.Comparers;
+using QA_Auto_BankApp.Models;
+using QA_Auto_BankApp.Models.BankClientInfo;
+using QA_Auto_BankApp.Models.PaymentMethods;
+
+namespace QA_Auto_BankApp
 {
     public class Program
     {
@@ -72,7 +77,7 @@
             var comparerList = new List<IComparer<BankClient>>
             {
                 new BankClientByNameComparer(),
-                new BankClientAdressComparer(),
+                new BankClientAddressComparer(),
                 new BankClientTotalAmountComparer(),
                 new BankClientNumberOfCardsComparer(),
                 new BankClientMaxAmountOnOnePayMethodComparer()
