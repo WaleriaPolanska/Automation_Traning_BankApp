@@ -4,48 +4,91 @@
     {
         public static void Main(string[] args)
         {
-            UserInfo userInfo = new UserInfo("Jan", "Kowalski", new Address("Lesnaya",
-                11100, "Warsaw", "Poland", 49, 209), "+48555555555");
-            List<Product> products = new List<Product>
-            {
-                new Product("hat", 155F),
-                new Product("sapogi", 2000F),
-                new Product("bag", 300F),
-                new Product("acvarium", 2100F),
-                new Product("sponge", 4600F)
-            };
+            UserInfo userInfo1 = new UserInfo("Jan", "Kowalski", new Address("Lesnaya",
+                11101, "Warsaw", "Poland", 49, 209), "+48555555555");
+            
+            UserInfo userInfo2 = new UserInfo("Marusia", "Lutshaya", new Address("Solnyechnaya",
+                11102, "Minsk", "Belarus", 9, 19), "+48555555551");
+
+            UserInfo userInfo3 = new UserInfo("Jon", "Kristos", new Address("Kalashki",
+                11103, "Vilnus", "Latvia", 45, 59), "+48555555552");
 
             var paymentMethod1 = new DebitCard("DebitCard1", 0000000000000000,
-                123, userInfo, 2.4F, 200);
-            var paymentMethod2 = new DebitCard("DebitCard2", 1111111111111111,
-                123, userInfo, 5.7F, 290);
-            var paymentMethod3 = new CashbackCard("CashbackCard1", 2222222222222222,
-                123, userInfo, 3.5F, 900);
-            var paymentMethod4 = new CreditCard("CreditCard1", 3333333333333333,
-                123, userInfo, 7.0F, 5000);
-            var paymentMethod5 = new CreditCard("CreditCard2", 4444444444444444,
-                123, userInfo, 5.8F, 850);
-            var paymentMethod6 = new Cash("Cash", 100);
-            var paymentMethod7 = new BitCoin("BTC", 20000, 0.5f);
+                111, userInfo1, 1.1F, 200);
+            var paymentMethod2 = new CreditCard("CreditCard1", 1111111111111111,
+                112, userInfo1, 1.2F, 570);
+            var paymentMethod3 = new CashbackCard("CashbackCard1", 2222222222222221,
+                113, userInfo1, 1.3F, 900);
+            var paymentMethod4 = new Cash("Cash", 100);
+            var paymentMethod5 = new BitCoin("BTC", 20000, 0.1f);
             
-            BankClient bankClient = new BankClient(userInfo);
-            
-            bankClient.AddPaymentMethod("DebitCard", paymentMethod1);
-            bankClient.AddPaymentMethod("DebitCard", paymentMethod2);
-            bankClient.AddPaymentMethod("CashbackCard", paymentMethod3);
-            bankClient.AddPaymentMethod("CreditCard", paymentMethod4);
-            bankClient.AddPaymentMethod("CreditCard", paymentMethod5);
-            bankClient.AddPaymentMethod("Cash", paymentMethod6);
-            bankClient.AddPaymentMethod("BitCoin", paymentMethod7);
+            var paymentMethod6 = new DebitCard("DebitCard2", 1111111111111112,
+                221, userInfo2, 2.1F, 190);
+            var paymentMethod7 = new CreditCard("CreditCard2", 3333333333333332,
+                222, userInfo2, 2.2F, 78000);
+            var paymentMethod8 = new CashbackCard("CashbackCard3", 2222222222222222,
+                223, userInfo2, 2.3F, 909);
+            var paymentMethod9 = new Cash("Cash", 100);
+            var paymentMethod10 = new BitCoin("BTC", 20000, 0.2f);
 
-            bankClient.TopUpPaymentMethod("DebitCard", "DebitCard1", 200);
+            var paymentMethod11 = new DebitCard("DebitCard3", 1111111111111113,
+                331, userInfo2, 3.1F, 290);
+            var paymentMethod12 = new CreditCard("CreditCard3", 4444444444444443,
+                332, userInfo3, 3.2F, 8850);
+            var paymentMethod13 = new CashbackCard("CashbackCard3", 2222222222222223,
+                333, userInfo3, 3.3F, 700);
+            var paymentMethod14 = new Cash("Cash", 100);
+            var paymentMethod15 = new BitCoin("BTC", 20000, 0.3f);
             
-            foreach (var product in products)
+            BankClient bankClient1 = new BankClient(userInfo1);
+            BankClient bankClient2 = new BankClient(userInfo2);
+            BankClient bankClient3 = new BankClient(userInfo3);
+
+            bankClient1.AddPaymentMethod("DebitCard", paymentMethod1);
+            bankClient1.AddPaymentMethod("CreditCard", paymentMethod2);
+            bankClient1.AddPaymentMethod("CashbackCard", paymentMethod3);
+            bankClient1.AddPaymentMethod("Cash", paymentMethod4);
+            bankClient1.AddPaymentMethod("BitCoin", paymentMethod5);
+            
+            bankClient2.AddPaymentMethod("DebitCard", paymentMethod6);
+            bankClient2.AddPaymentMethod("CreditCard", paymentMethod7);
+            bankClient2.AddPaymentMethod("CashbackCard", paymentMethod8);
+            bankClient2.AddPaymentMethod("Cash", paymentMethod9);
+            bankClient2.AddPaymentMethod("BitCoin", paymentMethod10);
+
+            bankClient3.AddPaymentMethod("DebitCard", paymentMethod11);
+            bankClient3.AddPaymentMethod("CreditCard", paymentMethod12);
+            bankClient3.AddPaymentMethod("CashbackCard", paymentMethod13);
+            bankClient3.AddPaymentMethod("Cash", paymentMethod14);
+            bankClient3.AddPaymentMethod("BitCoin", paymentMethod15);
+            
+            var bankClients = new List<BankClient>
             {
-                bankClient.Pay(product.Price);
-            }
+                bankClient1,
+                bankClient2,
+                bankClient3
+            };
 
-            bankClient.OutputBalances();
+            var comparerList = new List<IComparer<BankClient>>
+            {
+                new BankClientByNameComparer(),
+                new BankClientAdressComparer(),
+                new BankClientTotalAmountComparer(),
+                new BankClientNumberOfCardsComparer(),
+                new BankClientMaxAmountOnOnePayMethodComparer()
+            };
+
+            foreach (var comparer in comparerList)
+            {
+                bankClients.Sort(comparer);
+
+                foreach (var client in bankClients)
+                {
+                    Console.WriteLine(client);
+                }
+
+                Console.WriteLine();
+            }
         }
     }
 }
