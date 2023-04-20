@@ -18,9 +18,11 @@ public class BankClientMaxAmountOnOnePayMethodComparer : IComparer<BankClient>
         {
             foreach (var paymentMethod in x.PaymentMethodsByName[key])
             {
-                if (xBankClientMaxAmountOnOnePayMethod < paymentMethod.GetBalance())
+                var balance = paymentMethod.GetBalance();
+                
+                if (xBankClientMaxAmountOnOnePayMethod < balance)
                 {
-                    xBankClientMaxAmountOnOnePayMethod = paymentMethod.GetBalance();
+                    xBankClientMaxAmountOnOnePayMethod = balance;
                 }
             }
         }
@@ -29,9 +31,11 @@ public class BankClientMaxAmountOnOnePayMethodComparer : IComparer<BankClient>
         {
             foreach (var paymentMethod in y.PaymentMethodsByName[key])
             {
-                if (yBankClientMaxAmountOnOnePayMethod < paymentMethod.GetBalance())
+                var balance = paymentMethod.GetBalance();
+                
+                if (yBankClientMaxAmountOnOnePayMethod < balance)
                 {
-                    yBankClientMaxAmountOnOnePayMethod = paymentMethod.GetBalance();
+                    yBankClientMaxAmountOnOnePayMethod = balance;
                 }
             }
         }

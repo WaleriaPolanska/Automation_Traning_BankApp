@@ -73,21 +73,53 @@ namespace QA_Auto_BankApp
                 bankClient2,
                 bankClient3
             };
+            
+            var sortedBankClientsByName = bankClients.OrderBy(x => x.UserInfo.Name).ToList();
+            var sortedBankClientsByAddress = bankClients.OrderBy(x => x.UserInfo.Address.Country)
+                .ThenBy(x => x.UserInfo.Address.City).ThenBy(x => x.UserInfo.Address.Postcode)
+                .ThenBy(x => x.UserInfo.Address.Street).ThenBy(x => x.UserInfo.Address.BuildingNumber)
+                .ThenBy(x => x.UserInfo.Address.Apartment).ToList();
+            
+            var sortedBankClientsByTotalAmount = bankClients.OrderBy(x => 
+                x.PaymentMethodsByName.Keys.Sum(key => x.PaymentMethodsByName[key]
+                    .Sum(paymentMethod => paymentMethod.GetBalance()))).ToList();
+            
+            var sortedBankClientsNumberOfCards = bankClients.OrderBy(x => 
+                x.PaymentMethodsByName.Keys.Where(key => key is "DebitCard" or "CreditCard" or "CashbackCard")
+                    .Sum(key => x.PaymentMethodsByName[key].Count)).ToList();
 
-            var comparerList = new List<IComparer<BankClient>>
+            var sortedBankClientMaxAmountOnOnePayMethod = bankClients.OrderBy(x =>
             {
-                new BankClientByNameComparer(),
-                new BankClientAddressComparer(),
-                new BankClientTotalAmountComparer(),
-                new BankClientNumberOfCardsComparer(),
-                new BankClientMaxAmountOnOnePayMethodComparer()
+                var max = 0f;
+
+                foreach (var key in x.PaymentMethodsByName.Keys)
+                {
+                    foreach (var paymentMethod in x.PaymentMethodsByName[key])
+                    {
+                        var balance = paymentMethod.GetBalance();
+                        
+                        if (max < balance)
+                        {
+                            max = balance;
+                        }
+                    }
+                }
+                
+                return max;
+            }).ToList();
+
+            var sortedCollections = new List<List<BankClient>>
+            {
+                sortedBankClientsByName, 
+                sortedBankClientsByAddress,
+                sortedBankClientsByTotalAmount,
+                sortedBankClientsNumberOfCards,
+                sortedBankClientMaxAmountOnOnePayMethod
             };
-
-            foreach (var comparer in comparerList)
+            
+            foreach (var sortedCollection in sortedCollections)
             {
-                bankClients.Sort(comparer);
-
-                foreach (var client in bankClients)
+                foreach (var client in sortedCollection)
                 {
                     Console.WriteLine(client);
                 }
