@@ -1,4 +1,7 @@
-namespace QA_Auto_BankApp;
+using QA_Auto_BankApp.Interfaces;
+using QA_Auto_BankApp.Models.BankClientInfo;
+
+namespace QA_Auto_BankApp.Models.PaymentMethods;
 
 public abstract class PaymentCard : IPayment
 {

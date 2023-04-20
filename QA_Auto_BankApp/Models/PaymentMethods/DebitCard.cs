@@ -1,11 +1,12 @@
-namespace QA_Auto_BankApp;
+using QA_Auto_BankApp.Interfaces;
+using QA_Auto_BankApp.Models.BankClientInfo;
+
+namespace QA_Auto_BankApp.Models.PaymentMethods;
 
 public class DebitCard : PaymentCard
 {
     public float Interest { get; set; }
     public float Debit { get; set; }
-    
-    private IPayment _paymentImplementation;
 
     public DebitCard(string nameOfPaymentMethod, long numberOfCard, int codeCVV, UserInfo userInfo, float interest,
         float debit) : base(nameOfPaymentMethod, numberOfCard, codeCVV, userInfo)

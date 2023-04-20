@@ -1,4 +1,7 @@
-namespace QA_Auto_BankApp;
+using QA_Auto_BankApp.Interfaces;
+using QA_Auto_BankApp.Models.BankClientInfo;
+
+namespace QA_Auto_BankApp.Models;
 
 public class BankClient
 {
@@ -7,12 +10,12 @@ public class BankClient
     
     public UserInfo UserInfo { get; }
 
-    private Dictionary<string, List<IPayment>> _paymentMethodsByName { get; }
+    public Dictionary<string, List<IPayment>> PaymentMethodsByName { get; }
 
     public BankClient(UserInfo userInfo)
     {
         UserInfo = userInfo;
-        _paymentMethodsByName = new Dictionary<string, List<IPayment>>();
+        PaymentMethodsByName = new Dictionary<string, List<IPayment>>();
     }
 
     public void AddPaymentMethod(string paymentMethodType, IPayment paymentMethod)
@@ -22,19 +25,19 @@ public class BankClient
             return;
         }
         
-        if (!_paymentMethodsByName.ContainsKey(paymentMethodType))
+        if (!PaymentMethodsByName.ContainsKey(paymentMethodType))
         {
-            _paymentMethodsByName.Add(paymentMethodType, new List<IPayment>());
+            PaymentMethodsByName.Add(paymentMethodType, new List<IPayment>());
         }
         
-        _paymentMethodsByName[paymentMethodType].Add(paymentMethod);
+        PaymentMethodsByName[paymentMethodType].Add(paymentMethod);
     }
 
     public void TopUpPaymentMethod(string paymentMethodType, string name, float amount)
     {
-        if (_paymentMethodsByName.ContainsKey(paymentMethodType))
+        if (PaymentMethodsByName.ContainsKey(paymentMethodType))
         {
-            var paymentMethods = _paymentMethodsByName[paymentMethodType];
+            var paymentMethods = PaymentMethodsByName[paymentMethodType];
             var paymentMethod = paymentMethods.FirstOrDefault(x => x.Name == name);
 
             paymentMethod?.TopUp(amount);
@@ -45,9 +48,9 @@ public class BankClient
     {
         foreach (var paymentMethodType in _paymentMethodsTypesQueue)
         {
-            if (_paymentMethodsByName.ContainsKey(paymentMethodType))
+            if (PaymentMethodsByName.ContainsKey(paymentMethodType))
             {
-                var paymentMethods = _paymentMethodsByName[paymentMethodType];
+                var paymentMethods = PaymentMethodsByName[paymentMethodType];
 
                 foreach (var paymentMethod in paymentMethods)
                 {
@@ -64,12 +67,17 @@ public class BankClient
 
     public void OutputBalances()
     {
-        foreach (var (_, paymentMethods) in _paymentMethodsByName)
+        foreach (var (_, paymentMethods) in PaymentMethodsByName)
         {
             foreach (var paymentMethod in paymentMethods)
             {
                 Console.WriteLine($"{paymentMethod.Name} - {paymentMethod.GetBalance()}");   
             }
         }
+    }
+
+    public override string ToString()
+    {
+        return $"{UserInfo.Name} {UserInfo.LastName}";
     }
 }
