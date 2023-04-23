@@ -1,3 +1,4 @@
+using QA_Auto_BankApp.Helpers;
 using QA_Auto_BankApp.Interfaces;
 using QA_Auto_BankApp.Models.BankClientInfo;
 
@@ -5,10 +6,38 @@ namespace QA_Auto_BankApp.Models.PaymentMethods;
 
 public class DebitCard : PaymentCard
 {
-    public float Interest { get; set; }
-    public float Debit { get; set; }
+    private float _interest;
+    private float _debit;
 
-    public DebitCard(string nameOfPaymentMethod, long numberOfCard, int codeCVV, UserInfo userInfo, float interest,
+    public float Interest
+    {
+        get { return _interest; }
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Interest"), nameof(value));
+            }
+
+            _interest = value;
+        }
+    }
+
+    public float Debit
+    {
+        get { return _debit; }
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Debit"), nameof(value));
+            }
+
+            _debit = value;
+        }
+    }
+
+    public DebitCard(string nameOfPaymentMethod, string numberOfCard, int codeCVV, UserInfo userInfo, float interest,
         float debit) : base(nameOfPaymentMethod, numberOfCard, codeCVV, userInfo)
 
     {
@@ -21,13 +50,13 @@ public class DebitCard : PaymentCard
         if (IPayment.IsCanPay(sum, Debit))
         {
             Debit -= sum;
-            
+
             return true;
         }
 
         return false;
     }
-    
+
     public override void TopUp(float amount)
     {
         Debit += amount + amount * Interest / 100;

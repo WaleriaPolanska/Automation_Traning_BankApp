@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QA_Auto_BankApp", "QA_Auto_BankApp\QA_Auto_BankApp.csproj", "{A01DC5F3-6A25-4FAE-9781-93F7F1FB0BE4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{6389007F-25F1-479B-9CAE-EB097B7D7126}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{A01DC5F3-6A25-4FAE-9781-93F7F1FB0BE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A01DC5F3-6A25-4FAE-9781-93F7F1FB0BE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A01DC5F3-6A25-4FAE-9781-93F7F1FB0BE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6389007F-25F1-479B-9CAE-EB097B7D7126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6389007F-25F1-479B-9CAE-EB097B7D7126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6389007F-25F1-479B-9CAE-EB097B7D7126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6389007F-25F1-479B-9CAE-EB097B7D7126}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

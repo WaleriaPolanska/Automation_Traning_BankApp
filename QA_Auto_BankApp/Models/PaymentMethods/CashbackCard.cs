@@ -1,3 +1,4 @@
+using QA_Auto_BankApp.Helpers;
 using QA_Auto_BankApp.Interfaces;
 using QA_Auto_BankApp.Models.BankClientInfo;
 
@@ -5,11 +6,39 @@ namespace QA_Auto_BankApp.Models.PaymentMethods;
 
 public class CashbackCard : PaymentCard
 {
-    public float Interest { get; set; }
-    public float Balance { get; set; }
+    private float _interest;
+    private float _balance;
 
+    public float Interest
+    {
+        get { return _interest; }
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Interest"), nameof(value));
+            }
 
-    public CashbackCard(string nameOfPaymentMethod, long numberOfCard, int codeCVV, UserInfo userInfo, float interest,
+            _interest = value;
+        }
+    }
+
+    public float Balance
+    {
+        get { return _balance; }
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Balance"), nameof(value));
+            }
+
+            _balance = value;
+        }
+    }
+    
+    public CashbackCard(string nameOfPaymentMethod, string numberOfCard, int codeCVV, UserInfo userInfo, float
+        interest,
         float balance) : base(nameOfPaymentMethod, numberOfCard, codeCVV, userInfo)
 
     {
@@ -22,7 +51,7 @@ public class CashbackCard : PaymentCard
         if (IPayment.IsCanPay(sum, Balance))
         {
             Balance = (Balance - sum) + sum * Interest / 100F;
-            
+
             return true;
         }
 

@@ -2,15 +2,15 @@ namespace QA_Auto_BankApp.Models.PaymentMethods;
 
 public class ExpirationDate
 {
-    public int Month { get; }
-
-    public int Year { get; }
-
+    private readonly int _month;
+    private readonly int _year;
+    
     public ExpirationDate()
     {
         var expirationDate = GetCardExpirationDate();
-        Month = expirationDate.Month;
-        Year = expirationDate.Year;
+        
+        _month = expirationDate.Month;
+        _year = expirationDate.Year;
     }
 
     private static DateTime GetCardExpirationDate()
@@ -20,6 +20,6 @@ public class ExpirationDate
 
     public override string ToString()
     {
-        return $"{Month}/{Year}";
+        return $"{_month}/{_year}";
     }
 }

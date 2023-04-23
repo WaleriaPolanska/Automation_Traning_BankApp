@@ -1,3 +1,4 @@
+using QA_Auto_BankApp.Helpers;
 using QA_Auto_BankApp.Interfaces;
 using QA_Auto_BankApp.Models.BankClientInfo;
 
@@ -5,11 +6,38 @@ namespace QA_Auto_BankApp.Models.PaymentMethods;
 
 public class CreditCard : PaymentCard
 {
-    public float CreditPercentage { get; }
-    public float CreditLimit { get; set; }
+    private float _creditPercentage;
+    private float _creditLimit;
 
+    public float CreditPercentage
+    {
+        get { return _creditPercentage; }
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("CreditPercentage"), nameof(value));
+            }
 
-    public CreditCard(string nameOfPaymentMethod, long numberOfCard, int codeCVV, UserInfo userInfo,
+            _creditPercentage = value;
+        }
+    }
+
+    public float CreditLimit
+    {
+        get { return _creditLimit; }
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("CreditLimit"), nameof(value));
+            }
+
+            _creditLimit = value;
+        }
+    }
+    
+    public CreditCard(string nameOfPaymentMethod, string numberOfCard, int codeCVV, UserInfo userInfo,
         float creditPercentage,
         float creditLimit) : base(nameOfPaymentMethod, numberOfCard, codeCVV, userInfo)
     {

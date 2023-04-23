@@ -1,15 +1,99 @@
+using QA_Auto_BankApp.Helpers;
+
 namespace QA_Auto_BankApp.Models.BankClientInfo;
 
 public class Address
 {
-    public string Street { get; }
-    public int Postcode { get; }
-    public string City { get; }
-    public string Country { get; }
+    private string _street;
+    private int _postcode;
+    private string _city;
+    private string _country;
+    private int _buildingNumber;
+    private int _apartment;
 
-    public int BuildingNumber { get; set; }
+    public string Street
+    {
+        get { return _street; }
+        set
+        {
+            if (string.IsNullOrEmpty(value) || value.Length > 50)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Street"), nameof(value));
+            }
 
-    public int Apartment { get; set; }
+            _street = value;
+        }
+    }
+
+    public int Postcode
+    {
+        get { return _postcode; }
+        set
+        {
+            if (value <= 0 || value.ToString().Length > 5)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Postcode"), nameof(value));
+            }
+
+            _postcode = value;
+        }
+    }
+
+    public string City
+    {
+        get { return _city; }
+        set
+        {
+            if (string.IsNullOrEmpty(value) || value.Length > 20)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("City"), nameof(value));
+            }
+
+            _city = value;
+        }
+    }
+
+    public string Country
+    {
+        get { return _country; }
+        set
+        {
+            if (string.IsNullOrEmpty(value) || value.Length > 20)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Country"), nameof(value));
+            }
+
+            _country = value;
+        }
+    }
+    
+    public int BuildingNumber
+    {
+        get { return _buildingNumber; }
+        set
+        {
+            if (value <= 0 || value.ToString().Length > 5)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Building number"), nameof(value));
+            }
+
+            _buildingNumber = value;
+        }
+    }
+
+    public int Apartment
+    {
+        get { return _apartment; }
+        set
+        {
+            if (value <= 0 || value.ToString().Length > 5)
+            {
+                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Apartment"), nameof(value));
+            }
+
+            _apartment = value;
+        }
+    }
 
     public Address(string street, int postcode, string city, string country, int buildingNumber, int apartment)
     {
@@ -24,5 +108,22 @@ public class Address
     public override string ToString()
     {
         return $"Country: {Country} {Postcode}\nCity: {City}\nStreet: {Street}, {BuildingNumber}/{Apartment}";
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is Address address)
+        {
+            return Country == address.Country && Postcode == address.Postcode && City == address.City 
+                   && Street == address.Street && BuildingNumber == address.BuildingNumber 
+                   && Apartment == address.Apartment;
+        }
+        
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Country, Postcode, City, Street, BuildingNumber, Apartment);
     }
 }

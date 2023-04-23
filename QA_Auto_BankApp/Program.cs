@@ -11,40 +11,40 @@ namespace QA_Auto_BankApp
         {
             UserInfo userInfo1 = new UserInfo("Jan", "Kowalski", new Address("Lesnaya",
                 11101, "Warsaw", "Poland", 49, 209), "+48555555555");
-            
+
             UserInfo userInfo2 = new UserInfo("Marusia", "Lutshaya", new Address("Solnyechnaya",
                 11102, "Minsk", "Belarus", 9, 19), "+48555555551");
 
             UserInfo userInfo3 = new UserInfo("Jon", "Kristos", new Address("Kalashki",
                 11103, "Vilnus", "Latvia", 45, 59), "+48555555552");
 
-            var paymentMethod1 = new DebitCard("DebitCard1", 0000000000000000,
+            var paymentMethod1 = new DebitCard("DebitCard1", "0000000000000000",
                 111, userInfo1, 1.1F, 200);
-            var paymentMethod2 = new CreditCard("CreditCard1", 1111111111111111,
+            var paymentMethod2 = new CreditCard("CreditCard1", "1111111111111111",
                 112, userInfo1, 1.2F, 570);
-            var paymentMethod3 = new CashbackCard("CashbackCard1", 2222222222222221,
+            var paymentMethod3 = new CashbackCard("CashbackCard1", "2222222222222221",
                 113, userInfo1, 1.3F, 900);
             var paymentMethod4 = new Cash("Cash", 100);
             var paymentMethod5 = new BitCoin("BTC", 20000, 0.1f);
-            
-            var paymentMethod6 = new DebitCard("DebitCard2", 1111111111111112,
+
+            var paymentMethod6 = new DebitCard("DebitCard2", "1111111111111112",
                 221, userInfo2, 2.1F, 190);
-            var paymentMethod7 = new CreditCard("CreditCard2", 3333333333333332,
+            var paymentMethod7 = new CreditCard("CreditCard2", "3333333333333332",
                 222, userInfo2, 2.2F, 78000);
-            var paymentMethod8 = new CashbackCard("CashbackCard3", 2222222222222222,
+            var paymentMethod8 = new CashbackCard("CashbackCard3", "2222222222222222",
                 223, userInfo2, 2.3F, 909);
             var paymentMethod9 = new Cash("Cash", 100);
             var paymentMethod10 = new BitCoin("BTC", 20000, 0.2f);
 
-            var paymentMethod11 = new DebitCard("DebitCard3", 1111111111111113,
+            var paymentMethod11 = new DebitCard("DebitCard3", "1111111111111113",
                 331, userInfo2, 3.1F, 290);
-            var paymentMethod12 = new CreditCard("CreditCard3", 4444444444444443,
+            var paymentMethod12 = new CreditCard("CreditCard3", "4444444444444443",
                 332, userInfo3, 3.2F, 8850);
-            var paymentMethod13 = new CashbackCard("CashbackCard3", 2222222222222223,
+            var paymentMethod13 = new CashbackCard("CashbackCard3", "2222222222222223",
                 333, userInfo3, 3.3F, 700);
             var paymentMethod14 = new Cash("Cash", 100);
             var paymentMethod15 = new BitCoin("BTC", 20000, 0.3f);
-            
+
             BankClient bankClient1 = new BankClient(userInfo1);
             BankClient bankClient2 = new BankClient(userInfo2);
             BankClient bankClient3 = new BankClient(userInfo3);
@@ -54,7 +54,7 @@ namespace QA_Auto_BankApp
             bankClient1.AddPaymentMethod("CashbackCard", paymentMethod3);
             bankClient1.AddPaymentMethod("Cash", paymentMethod4);
             bankClient1.AddPaymentMethod("BitCoin", paymentMethod5);
-            
+
             bankClient2.AddPaymentMethod("DebitCard", paymentMethod6);
             bankClient2.AddPaymentMethod("CreditCard", paymentMethod7);
             bankClient2.AddPaymentMethod("CashbackCard", paymentMethod8);
@@ -66,25 +66,25 @@ namespace QA_Auto_BankApp
             bankClient3.AddPaymentMethod("CashbackCard", paymentMethod13);
             bankClient3.AddPaymentMethod("Cash", paymentMethod14);
             bankClient3.AddPaymentMethod("BitCoin", paymentMethod15);
-            
+
             var bankClients = new List<BankClient>
             {
                 bankClient1,
                 bankClient2,
                 bankClient3
             };
-            
+
             var sortedBankClientsByName = bankClients.OrderBy(x => x.UserInfo.Name).ToList();
             var sortedBankClientsByAddress = bankClients.OrderBy(x => x.UserInfo.Address.Country)
                 .ThenBy(x => x.UserInfo.Address.City).ThenBy(x => x.UserInfo.Address.Postcode)
                 .ThenBy(x => x.UserInfo.Address.Street).ThenBy(x => x.UserInfo.Address.BuildingNumber)
                 .ThenBy(x => x.UserInfo.Address.Apartment).ToList();
-            
-            var sortedBankClientsByTotalAmount = bankClients.OrderBy(x => 
+
+            var sortedBankClientsByTotalAmount = bankClients.OrderBy(x =>
                 x.PaymentMethodsByName.Keys.Sum(key => x.PaymentMethodsByName[key]
                     .Sum(paymentMethod => paymentMethod.GetBalance()))).ToList();
-            
-            var sortedBankClientsNumberOfCards = bankClients.OrderBy(x => 
+
+            var sortedBankClientsNumberOfCards = bankClients.OrderBy(x =>
                 x.PaymentMethodsByName.Keys.Where(key => key is "DebitCard" or "CreditCard" or "CashbackCard")
                     .Sum(key => x.PaymentMethodsByName[key].Count)).ToList();
 
@@ -97,35 +97,34 @@ namespace QA_Auto_BankApp
                     foreach (var paymentMethod in x.PaymentMethodsByName[key])
                     {
                         var balance = paymentMethod.GetBalance();
-                        
+
                         if (max < balance)
                         {
                             max = balance;
                         }
                     }
                 }
-                
+
                 return max;
             }).ToList();
 
-            var sortedCollections = new List<List<BankClient>>
+            foreach (var client in bankClients)
             {
-                sortedBankClientsByName, 
-                sortedBankClientsByAddress,
-                sortedBankClientsByTotalAmount,
-                sortedBankClientsNumberOfCards,
-                sortedBankClientMaxAmountOnOnePayMethod
-            };
-            
-            foreach (var sortedCollection in sortedCollections)
-            {
-                foreach (var client in sortedCollection)
-                {
-                    Console.WriteLine(client);
-                }
-
-                Console.WriteLine();
+                Console.WriteLine(client);
             }
+
+            var userInfo4 = new UserInfo("Peter", "Pan", new Address("Forest",
+                11102, "Dortmund", "Germany", 33, 219), "+48444444444");
+            var userInfo5 = new UserInfo("Peter", "Pan", new Address("Forest",
+                11102, "Dortmund", "Germany", 33, 219), "+48444444444");
+            var bankClient4 = new BankClient(userInfo4);
+            var bankClient5 = new BankClient(userInfo5);
+
+            bankClient4.AddPaymentMethod("BitCoin", new BitCoin("My BTC", 30000, 0.5f));
+            bankClient5.AddPaymentMethod("DebitCard", new DebitCard("My Card", "4444444444444444", 333, userInfo5, 0, 10000f));
+            bankClient5.AddPaymentMethod("Cash", new Cash("Cash", 5000f));
+
+            Console.WriteLine(bankClient4.Equals(bankClient5));
         }
     }
 }
