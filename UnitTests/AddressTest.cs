@@ -141,4 +141,116 @@ public class AddressTest
 
         Assert.Equal(expectedToString, actualToString);
     }
+    
+    [Fact]
+    public void AddressesEqualityIsValid()
+    {
+        const string country = "Poland";
+        const string city = "Warsaw";
+        const int postcode = 123;
+        const string street = "Les";
+        const int buildingNumber = 22;
+        const int apartment = 23;
+
+        var address1 = new Address(street, postcode, city, country, buildingNumber, apartment);
+        var address2 = new Address(street, postcode, city, country, buildingNumber, apartment);
+
+        Assert.True(address1.Equals(address2));
+    }
+    
+    [Fact]
+    public void AddressesEqualityIsNotValidIfStreetsAreNotEqual()
+    {
+        const string country = "Poland";
+        const string city = "Warsaw";
+        const int postcode = 123;
+        const string street = "Les";
+        const int buildingNumber = 22;
+        const int apartment = 23;
+
+        var address1 = new Address(street, postcode, city, country, buildingNumber, apartment);
+        var address2 = new Address("Doroga", postcode, city, country, buildingNumber, apartment);
+
+        Assert.False(address1.Equals(address2));
+    }
+    
+    [Fact]
+    public void AddressesEqualityIsNotValidIfPostCodesAreNotEqual()
+    {
+        const string country = "Poland";
+        const string city = "Warsaw";
+        const int postcode = 123;
+        const string street = "Les";
+        const int buildingNumber = 22;
+        const int apartment = 23;
+
+        var address1 = new Address(street, 456, city, country, buildingNumber, apartment);
+        var address2 = new Address(street, postcode, city, country, buildingNumber, apartment);
+
+        Assert.False(address1.Equals(address2));
+    }
+    
+    [Fact]
+    public void AddressesEqualityIsNotValidIfCitiesAreNotEqual()
+    {
+        const string country = "Poland";
+        const string city = "Warsaw";
+        const int postcode = 123;
+        const string street = "Les";
+        const int buildingNumber = 22;
+        const int apartment = 23;
+
+        var address1 = new Address(street, postcode, "Wroclaw", country, buildingNumber, apartment);
+        var address2 = new Address(street, postcode, city, country, buildingNumber, apartment);
+
+        Assert.False(address1.Equals(address2));
+    }
+    
+    [Fact]
+    public void AddressesEqualityIsNotValidIfCountriesAreNotEqual()
+    {
+        const string country = "Poland";
+        const string city = "Warsaw";
+        const int postcode = 123;
+        const string street = "Les";
+        const int buildingNumber = 22;
+        const int apartment = 23;
+
+        var address1 = new Address(street, postcode, city, country, buildingNumber, apartment);
+        var address2 = new Address(street, postcode, city, "Italy", buildingNumber, apartment);
+
+        Assert.False(address1.Equals(address2));
+    }
+    
+    [Fact]
+    public void AddressesEqualityIsNotValidIfBuildingNumbersAreNotEqual()
+    {
+        const string country = "Poland";
+        const string city = "Warsaw";
+        const int postcode = 123;
+        const string street = "Les";
+        const int buildingNumber = 22;
+        const int apartment = 23;
+
+        var address1 = new Address(street, postcode, city, country, 100, apartment);
+        var address2 = new Address(street, postcode, city, country, buildingNumber, apartment);
+
+        Assert.False(address1.Equals(address2));
+    }
+    
+    [Fact]
+    public void AddressesEqualityIsNotValidIfApartmentsAreNotEqual()
+    {
+        const string country = "Poland";
+        const string city = "Warsaw";
+        const int postcode = 123;
+        const string street = "Les";
+        const int buildingNumber = 22;
+        const int apartment = 23;
+
+        var address1 = new Address(street, postcode, city, country, buildingNumber, apartment);
+        var address2 = new Address(street, postcode, city, country, buildingNumber, 100);
+
+        Assert.False(address1.Equals(address2));
+    }
 }

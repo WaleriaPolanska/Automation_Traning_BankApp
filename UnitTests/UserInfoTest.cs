@@ -82,11 +82,6 @@ public class UserInfoTest
         Assert.Throws<ArgumentException>(() => new UserInfo("Todd", "Harris", GetDefaultAddress(), phone));
     }
 
-    private static Address GetDefaultAddress()
-    {
-        return new Address("Polevaya", 2222, "Warsaw", "Poland", 222, 111);
-    }
-    
     [Fact]
     public void UserInfoToStringReturnsValidResult()
     {
@@ -107,5 +102,88 @@ public class UserInfoTest
         var actualToString = userInfo.ToString();
 
         Assert.Equal(expectedToString, actualToString);
+    }
+
+    [Fact]
+    public void UserInfosEqualityIsValid()
+    {
+        const string name = "Tom";
+        const string lastName = "Sawyer";
+        const string phone = "+77777777777";
+        
+        var address = GetDefaultAddress();
+
+        var userInfo1 = new UserInfo(name, lastName, address, phone);
+        var userInfo2 = new UserInfo(name, lastName, address, phone);
+
+        Assert.True(userInfo1.Equals(userInfo2));
+    }
+    
+    [Fact]
+    public void UserInfosEqualityIsNotValidIfSNamesAreNotEqual()
+    {
+        const string name = "Tom";
+        const string lastName = "Sawyer";
+        const string phone = "+77777777777";
+        
+        var address = GetDefaultAddress();
+
+        var userInfo1 = new UserInfo(name, lastName, address, phone);
+        var userInfo2 = new UserInfo("Sam", lastName, address, phone);
+
+        Assert.False(userInfo1.Equals(userInfo2));
+    }
+    
+    [Fact]
+    public void UserInfosEqualityIsNotValidIfLastNamesAreNotEqual()
+    {
+        const string name = "Tom";
+        const string lastName = "Sawyer";
+        const string phone = "+77777777777";
+        
+        var address = GetDefaultAddress();
+
+        var userInfo1 = new UserInfo(name, "Finn", address, phone);
+        var userInfo2 = new UserInfo(name, lastName, address, phone);
+
+        Assert.False(userInfo1.Equals(userInfo2));
+    }
+    
+    [Fact]
+    public void UserInfosEqualityIsNotValidIfAddressesAreNotEqual()
+    {
+        const string name = "Tom";
+        const string lastName = "Sawyer";
+        const string phone = "+77777777777";
+        
+        var address1 = GetDefaultAddress();
+        var address2 = GetDefaultAddress();
+
+        address2.Country = "Kongo";
+
+        var userInfo1 = new UserInfo(name, lastName, address1, phone);
+        var userInfo2 = new UserInfo(name, lastName, address2, phone);
+
+        Assert.False(userInfo1.Equals(userInfo2));
+    }
+    
+    [Fact]
+    public void UserInfosEqualityIsNotValidIfSPhonesAreNotEqual()
+    {
+        const string name = "Tom";
+        const string lastName = "Sawyer";
+        const string phone = "+77777777777";
+        
+        var address = GetDefaultAddress();
+
+        var userInfo1 = new UserInfo(name, lastName, address, phone);
+        var userInfo2 = new UserInfo(name, lastName, address, "+77777777778");
+
+        Assert.False(userInfo1.Equals(userInfo2));
+    }
+    
+    private static Address GetDefaultAddress()
+    {
+        return new Address("Polevaya", 2222, "Warsaw", "Poland", 222, 111);
     }
 }

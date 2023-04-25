@@ -93,7 +93,7 @@ public abstract class PaymentCard : IPayment
     public void GetCardInfo(string cardInfo)
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Payment Metod: {Name}");
+        Console.WriteLine($"Payment Method: {Name}");
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine(cardInfo);
         Console.ForegroundColor = ConsoleColor.Green;

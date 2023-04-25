@@ -57,4 +57,59 @@ public class CashbackCardTest
 
         Assert.Equal(expectedToString, actualToString);
     }
+    
+    [Fact]
+    public void CashbackCardMakePaymentIsSuccessful()
+    {
+        const float expectedBalance = 2160;
+        
+        var cashbackCard = new CashbackCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 6000f);
+        
+        var isPaymentSuccessful = cashbackCard.MakePayment(4000);
+
+        var actualBalance = cashbackCard.GetBalance();
+
+        Assert.True(isPaymentSuccessful);
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void CashbackCardMakePaymentIsUnsuccessfulIfBalanceNotEnough()
+    {
+        const float expectedBalance = 6000;
+        
+        var cashbackCard = new CashbackCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 6000f);
+        
+        var isPaymentSuccessful = cashbackCard.MakePayment(15000);
+
+        var actualBalance = cashbackCard.GetBalance();
+
+        Assert.False(isPaymentSuccessful);
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void CashbackCardTopUpIsSuccessful()
+    {
+        const float expectedBalance = 5000f;
+        
+        var cashbackCard = new CashbackCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 0f);
+        
+        cashbackCard.TopUp(5000);
+
+        var actualBalance = cashbackCard.GetBalance();
+
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void CashbackCardGetBalanceIsSuccessful()
+    {
+        const float expectedBalance = 0f;
+        
+        var cashbackCard = new CashbackCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 0f);
+        var actualBalance = cashbackCard.GetBalance();
+
+        Assert.Equal(expectedBalance, actualBalance);
+    }
 }

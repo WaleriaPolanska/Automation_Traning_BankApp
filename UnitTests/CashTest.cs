@@ -54,4 +54,59 @@ public class CashTest
 
         Assert.Equal(expectedToString, actualToString);
     }
+    
+    [Fact]
+    public void CashMakePaymentIsSuccessful()
+    {
+        const float expectedBalance = 1000;
+        
+        var cash = new Cash("cash", 5000);
+        
+        var isPaymentSuccessful = cash.MakePayment(4000);
+
+        var actualBalance = cash.GetBalance();
+
+        Assert.True(isPaymentSuccessful);
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void CashMakePaymentIsUnsuccessfulIfBalanceNotEnough()
+    {
+        const float expectedBalance = 1000;
+        
+        var cash = new Cash("cash", 1000);
+        
+        var isPaymentSuccessful = cash.MakePayment(3000);
+
+        var actualBalance = cash.GetBalance();
+
+        Assert.False(isPaymentSuccessful);
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void CashTopUpIsSuccessful()
+    {
+        const float expectedBalance = 15000f;
+        
+        var cash = new Cash("cash", 10000);
+        
+        cash.TopUp(5000);
+
+        var actualBalance = cash.GetBalance();
+
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void CashGetBalanceIsSuccessful()
+    {
+        const float expectedBalance = 10000;
+        
+        var cash = new Cash("cash", 10000);
+        var actualBalance = cash.GetBalance();
+
+        Assert.Equal(expectedBalance, actualBalance);
+    }
 }

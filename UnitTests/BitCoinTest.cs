@@ -71,4 +71,59 @@ public class BitCoinTest
 
         Assert.Equal(expectedToString, actualToString);
     }
+    
+    [Fact]
+    public void BitCoinMakePaymentIsSuccessful()
+    {
+        const float expectedBalance = 9f;
+        
+        var bitCoin = new BitCoin("btc", 30000, 10f);
+        
+        var isPaymentSuccessful = bitCoin.MakePayment(30000);
+
+        var actualBalance = bitCoin.Balance;
+
+        Assert.True(isPaymentSuccessful);
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void BitCoinMakePaymentIsUnsuccessfulIfBalanceNotEnough()
+    {
+        const float expectedBalance = 1f;
+        
+        var bitCoin = new BitCoin("btc", 10000, 1f);
+        
+        var isPaymentSuccessful = bitCoin.MakePayment(30000);
+
+        var actualBalance = bitCoin.Balance;
+
+        Assert.False(isPaymentSuccessful);
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void BitCoinTopUpIsSuccessful()
+    {
+        const float expectedBalance = 1.5f;
+        
+        var bitCoin = new BitCoin("btc", 20000, 1f);
+        
+        bitCoin.TopUp(10000);
+
+        var actualBalance = bitCoin.Balance;
+
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void BitCoinGetBalanceIsSuccessful()
+    {
+        const float expectedBalance = 5000f;
+        
+        var bitCoin = new BitCoin("btc", 10000, 0.5f);
+        var actualBalance = bitCoin.GetBalance();
+
+        Assert.Equal(expectedBalance, actualBalance);
+    }
 }

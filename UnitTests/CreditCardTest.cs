@@ -57,4 +57,58 @@ public class CreditCardTest
 
         Assert.Equal(expectedToString, actualToString);
     }
+    
+    [Fact]
+    public void CreditCardMakePaymentIsSuccessful()
+    {
+        const float expectedBalance = 2880;
+        
+        var creditCard = new CreditCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 6000f);
+        
+        var isPaymentSuccessful = creditCard.MakePayment(3000);
+
+        var actualBalance = creditCard.GetBalance();
+
+        Assert.True(isPaymentSuccessful);
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void CreditCardMakePaymentIsUnsuccessfulIfBalanceNotEnough()
+    {
+        const float expectedBalance = 1000;
+        
+        var creditCard = new CreditCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 1000f);
+        
+        var isPaymentSuccessful = creditCard.MakePayment(10000);
+        var actualBalance = creditCard.GetBalance();
+
+        Assert.False(isPaymentSuccessful);
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void CreditCardTopUpIsSuccessful()
+    {
+        const float expectedBalance = 5000f;
+        
+        var creditCard = new CreditCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 1000f);
+        
+        creditCard.TopUp(4000);
+
+        var actualBalance = creditCard.GetBalance();
+
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void CreditCardGetBalanceIsSuccessful()
+    {
+        const float expectedBalance = 3000f;
+        
+        var creditCard = new CreditCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 3000f);
+        var actualBalance = creditCard.GetBalance();
+
+        Assert.Equal(expectedBalance, actualBalance);
+    }
 }

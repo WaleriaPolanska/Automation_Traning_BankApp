@@ -57,4 +57,58 @@ public class DebitCardTest
 
         Assert.Equal(expectedToString, actualToString);
     }
+    
+    [Fact]
+    public void DebitCardMakePaymentIsSuccessful()
+    {
+        const float expectedBalance = 2000;
+        
+        var debitCard = new DebitCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 2000f);
+        
+        var isPaymentSuccessful = debitCard.MakePayment(0f);
+
+        var actualBalance = debitCard.GetBalance();
+
+        Assert.True(isPaymentSuccessful);
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void DebitCardMakePaymentIsUnsuccessfulIfBalanceNotEnough()
+    {
+        const float expectedBalance = 2000;
+        
+        var debitCard = new DebitCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 2000f);
+        
+        var isPaymentSuccessful = debitCard.MakePayment(20000);
+        var actualBalance = debitCard.GetBalance();
+
+        Assert.False(isPaymentSuccessful);
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void DebitCardTopUpIsSuccessful()
+    {
+        const float expectedBalance = 15520f;
+        
+        var debitCard = new DebitCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 2000f);
+        
+        debitCard.TopUp(13000);
+
+        var actualBalance = debitCard.GetBalance();
+
+        Assert.Equal(expectedBalance, actualBalance);
+    }
+    
+    [Fact]
+    public void DebitCardGetBalanceIsSuccessful()
+    {
+        const float expectedBalance = 30000f;
+        
+        var debitCard = new DebitCard("card", "1111111111111111", 222, UserInfoHelper.GetDefaultUserInfo(), 4f, 30000f);
+        var actualBalance = debitCard.GetBalance();
+
+        Assert.Equal(expectedBalance, actualBalance);
+    }
 }
