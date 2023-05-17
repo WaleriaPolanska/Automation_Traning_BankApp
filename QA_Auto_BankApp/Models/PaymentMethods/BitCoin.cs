@@ -3,15 +3,14 @@ using QA_Auto_BankApp.Interfaces;
 
 namespace QA_Auto_BankApp.Models.PaymentMethods;
 
-public class BitCoin : IPayment
+public class BitCoin : PaymentMethod, IPayment
 {
     private string _name;
-    private float _balance;
     private float _exchangeRate;
 
     public string Name
     {
-        get { return _name; }
+        get => _name;
         set
         {
             if (string.IsNullOrEmpty(value) || value.Length > 20)
@@ -23,23 +22,9 @@ public class BitCoin : IPayment
         }
     }
 
-    public float Balance
-    {
-        get { return _balance; }
-        set
-        {
-            if (value < 0)
-            {
-                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Balance"), nameof(value));
-            }
-
-            _balance = value;
-        }
-    }
-
     public float ExchangeRate
     {
-        get { return _exchangeRate; }
+        get => _exchangeRate;
         set
         {
             if (value < 0)
@@ -51,10 +36,9 @@ public class BitCoin : IPayment
         }
     }
     
-    public BitCoin(string paymentMethodName, float exchangeRate, float bitCoinAmount)
+    public BitCoin(string paymentMethodName, float exchangeRate, float bitCoinAmount) : base(bitCoinAmount)
     {
         Name = paymentMethodName;
-        Balance = bitCoinAmount;
         ExchangeRate = exchangeRate;
     }
 
@@ -62,7 +46,7 @@ public class BitCoin : IPayment
     {
         var bitCoinAmount = amount / ExchangeRate;
 
-        if (IPayment.IsCanPay(bitCoinAmount, Balance))
+        if (PaymentHelper.IsCanPay(bitCoinAmount, Balance))
         {
             Balance -= bitCoinAmount;
 
@@ -72,18 +56,9 @@ public class BitCoin : IPayment
         return false;
     }
 
-    public void TopUp(float amount)
-    {
-        Balance += amount / ExchangeRate;
-    }
+    public void TopUp(float amount) => Balance += amount / ExchangeRate;
 
-    public float GetBalance()
-    {
-        return Balance * ExchangeRate;
-    }
-    
-    public override string ToString()
-    {
-        return $"    BITCOIN\nName: {Name}\nBalance: {Balance}";
-    }
+    public float GetBalance() => Balance * ExchangeRate;
+
+    public override string ToString() => $"    BITCOIN\nName: {Name}\nBalance: {Balance}";
 }

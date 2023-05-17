@@ -3,14 +3,13 @@ using QA_Auto_BankApp.Interfaces;
 
 namespace QA_Auto_BankApp.Models.PaymentMethods;
 
-public class Cash : IPayment
+public class Cash : PaymentMethod, IPayment
 {
     private string _name;
-    private float _amount;
 
     public string Name
     {
-        get { return _name; }
+        get => _name;
         set
         {
             if (string.IsNullOrEmpty(value) || value.Length > 20)
@@ -21,32 +20,17 @@ public class Cash : IPayment
             _name = value;
         }
     }
-    
-    public float Amount
-    {
-        get { return _amount; }
-        set
-        {
-            if (value < 0)
-            {
-                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Amount"), nameof(value));
-            }
 
-            _amount = value;
-        }
-    }
-
-    public Cash(string paymentMethodName, float cashAmount)
+    public Cash(string paymentMethodName, float cashBalance) : base(cashBalance)
     {
         Name = paymentMethodName;
-        Amount = cashAmount;
     }
 
     public bool MakePayment(float amount)
     {
-        if (IPayment.IsCanPay(amount, Amount))
+        if (PaymentHelper.IsCanPay(amount, Balance))
         {
-            Amount -= amount;
+            Balance -= amount;
 
             return true;
         }
@@ -54,18 +38,9 @@ public class Cash : IPayment
         return false;
     }
 
-    public void TopUp(float amount)
-    {
-        Amount += amount;
-    }
+    public void TopUp(float amount) => Balance += amount;
 
-    public float GetBalance()
-    {
-        return Amount;
-    }
-    
-    public override string ToString()
-    {
-        return $"    CASH\nName: {Name}\nAmount: {Amount}";
-    }
+    public float GetBalance() => Balance;
+
+    public override string ToString() => $"    CASH\nName: {Name}\nAmount: {Balance}";
 }

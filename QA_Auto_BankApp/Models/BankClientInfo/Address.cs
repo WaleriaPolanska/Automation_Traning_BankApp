@@ -13,7 +13,7 @@ public class Address
 
     public string Street
     {
-        get { return _street; }
+        get => _street;
         set
         {
             if (string.IsNullOrEmpty(value) || value.Length > 50)
@@ -27,7 +27,7 @@ public class Address
 
     public int Postcode
     {
-        get { return _postcode; }
+        get => _postcode;
         set
         {
             if (value <= 0 || value.ToString().Length > 5)
@@ -41,7 +41,7 @@ public class Address
 
     public string City
     {
-        get { return _city; }
+        get => _city;
         set
         {
             if (string.IsNullOrEmpty(value) || value.Length > 20)
@@ -55,7 +55,7 @@ public class Address
 
     public string Country
     {
-        get { return _country; }
+        get => _country;
         set
         {
             if (string.IsNullOrEmpty(value) || value.Length > 20)
@@ -69,7 +69,7 @@ public class Address
     
     public int BuildingNumber
     {
-        get { return _buildingNumber; }
+        get => _buildingNumber;
         set
         {
             if (value <= 0 || value.ToString().Length > 5)
@@ -83,7 +83,7 @@ public class Address
 
     public int Apartment
     {
-        get { return _apartment; }
+        get => _apartment;
         set
         {
             if (value <= 0 || value.ToString().Length > 5)
@@ -105,10 +105,7 @@ public class Address
         Apartment = apartment;
     }
 
-    public override string ToString()
-    {
-        return $"Country: {Country} {Postcode}\nCity: {City}\nStreet: {Street}, {BuildingNumber}/{Apartment}";
-    }
+    public override string ToString() => $"Country: {Country} {Postcode}\nCity: {City}\nStreet: {Street}, {BuildingNumber}/{Apartment}";
 
     public override bool Equals(object? obj)
     {
@@ -122,8 +119,5 @@ public class Address
         return false;
     }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Country, Postcode, City, Street, BuildingNumber, Apartment);
-    }
+    public override int GetHashCode() => HashCode.Combine(Country, Postcode, City, Street, BuildingNumber, Apartment);
 }

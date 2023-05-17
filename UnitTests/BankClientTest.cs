@@ -1,5 +1,6 @@
 using System.Text;
 
+using QA_Auto_BankApp.Enums;
 using QA_Auto_BankApp.Models;
 using QA_Auto_BankApp.Models.BankClientInfo;
 using QA_Auto_BankApp.Models.PaymentMethods;
@@ -21,11 +22,8 @@ public class BankClientTest
     }
 
     [Fact]
-    public void BankClientUserInfoThrowsArgumentExceptionIfUserInfoIsNull()
-    {
-        Assert.Throws<ArgumentNullException>(() => new BankClient(null));
-    }
-    
+    public void BankClientUserInfoThrowsArgumentExceptionIfUserInfoIsNull() => Assert.Throws<ArgumentNullException>(() => new BankClient(null));
+
     [Fact]
     public void CashbackCardToStringReturnsValidResult()
     {
@@ -37,20 +35,20 @@ public class BankClientTest
         var debitCard = new DebitCard("debitcard", "1111111111111111", 123, userInfo, 12f, 2000f);
         var cashbackCard = new CashbackCard("cashbackcard", "1111111111111111", 123, userInfo, 11f, 3000f);
         
-        bankClient.AddPaymentMethod("Cash", cash);
-        bankClient.AddPaymentMethod("BitCoin", bitCoin);
-        bankClient.AddPaymentMethod("CreditCard", creditCard);
-        bankClient.AddPaymentMethod("DebitCard", debitCard);
-        bankClient.AddPaymentMethod("CashbackCard", cashbackCard);
+        bankClient.AddPaymentMethod(cash);
+        bankClient.AddPaymentMethod(cashbackCard);
+        bankClient.AddPaymentMethod(debitCard);
+        bankClient.AddPaymentMethod(creditCard);
+        bankClient.AddPaymentMethod(bitCoin);
 
         var expectedStringBuilder = new StringBuilder();
         
         expectedStringBuilder.Append($"{userInfo}\n");
         expectedStringBuilder.Append($"{cash}\n");
-        expectedStringBuilder.Append($"{bitCoin}\n");
-        expectedStringBuilder.Append($"{creditCard}\n");
+        expectedStringBuilder.Append($"{cashbackCard}\n");
         expectedStringBuilder.Append($"{debitCard}\n");
-        expectedStringBuilder.Append($"{cashbackCard}\n\n");
+        expectedStringBuilder.Append($"{creditCard}\n");
+        expectedStringBuilder.Append($"{bitCoin}\n\n");
 
         var expectedString = expectedStringBuilder.ToString();
         var actualToString = bankClient.ToString();
@@ -130,9 +128,9 @@ public class BankClientTest
         var userInfo = UserInfoHelper.GetDefaultUserInfo();
         var bankClient = GetBankClient(userInfo);
         
-        bankClient.TopUpPaymentMethod("Cash", "cash", 100f);
+        bankClient.TopUpPaymentMethod(PaymentType.Cash, "cash", 100f);
 
-        var actualBalance = bankClient.PaymentMethodsByName["Cash"].FirstOrDefault().GetBalance();
+        var actualBalance = bankClient.PaymentMethodsByName[PaymentType.Cash].FirstOrDefault().GetBalance();
 
         Assert.Equal(expectedBalance, actualBalance);
     }
@@ -144,11 +142,11 @@ public class BankClientTest
         var bankClient = new BankClient(userInfo);
         var cash = new Cash("cash", 1000f);
         
-        Assert.False(bankClient.PaymentMethodsByName.ContainsKey("Cash"));
+        Assert.True(!bankClient.PaymentMethodsByName[PaymentType.Cash].Any());
         
-        bankClient.AddPaymentMethod("Cash", cash);
+        bankClient.AddPaymentMethod(cash);
 
-        Assert.True(bankClient.PaymentMethodsByName.ContainsKey("Cash"));
+        Assert.True(bankClient.PaymentMethodsByName[PaymentType.Cash].Count == 1);
     }
     
     [Fact]
@@ -158,11 +156,11 @@ public class BankClientTest
         var bankClient = new BankClient(userInfo);
         var cash = new Cash("cash", 1000f);
         
-        bankClient.AddPaymentMethod("Cash", cash);
+        bankClient.AddPaymentMethod(cash);
 
         var expectedPaymentMethodCategories = bankClient.PaymentMethodsByName.Count;
         
-        bankClient.AddPaymentMethod("Cash", cash);
+        bankClient.AddPaymentMethod(cash);
         
         var actualPaymentMethodCategories = bankClient.PaymentMethodsByName.Count;
         
@@ -179,15 +177,15 @@ public class BankClientTest
         var bankClient = new BankClient(userInfo);
         var cash = new Cash("cash", 1000f);
 
-        bankClient.AddPaymentMethod("Cash", cash);
+        bankClient.AddPaymentMethod(cash);
 
-        var actualBalanceBeforePayment = bankClient.PaymentMethodsByName["Cash"].FirstOrDefault().GetBalance();
+        var actualBalanceBeforePayment = bankClient.PaymentMethodsByName[PaymentType.Cash].FirstOrDefault().GetBalance();
         
         Assert.Equal(expectedBalanceBeforePayment, actualBalanceBeforePayment);
 
         var isPaymentSuccessful = bankClient.Pay(500);
         
-        var actualBalanceAfterPayment = bankClient.PaymentMethodsByName["Cash"].FirstOrDefault().GetBalance();
+        var actualBalanceAfterPayment = bankClient.PaymentMethodsByName[PaymentType.Cash].FirstOrDefault().GetBalance();
         
         Assert.True(isPaymentSuccessful);
         Assert.Equal(expectedBalanceAfterPayment, actualBalanceAfterPayment);
@@ -203,15 +201,15 @@ public class BankClientTest
         var bankClient = new BankClient(userInfo);
         var cash = new Cash("cash", 1000f);
 
-        bankClient.AddPaymentMethod("Cash", cash);
+        bankClient.AddPaymentMethod(cash);
 
-        var actualBalanceBeforePayment = bankClient.PaymentMethodsByName["Cash"].FirstOrDefault().GetBalance();
+        var actualBalanceBeforePayment = bankClient.PaymentMethodsByName[PaymentType.Cash].FirstOrDefault().GetBalance();
         
         Assert.Equal(expectedBalanceBeforePayment, actualBalanceBeforePayment);
 
         var isPaymentSuccessful = bankClient.Pay(1500);
         
-        var actualBalanceAfterPayment = bankClient.PaymentMethodsByName["Cash"].FirstOrDefault().GetBalance();
+        var actualBalanceAfterPayment = bankClient.PaymentMethodsByName[PaymentType.Cash].FirstOrDefault().GetBalance();
         
         Assert.False(isPaymentSuccessful);
         Assert.Equal(expectedBalanceAfterPayment, actualBalanceAfterPayment);
@@ -226,11 +224,11 @@ public class BankClientTest
         var debitCard = new DebitCard("debitcard", "1111111111111111", 123, userInfo, 12f, 2000f);
         var cashbackCard = new CashbackCard("cashbackcard", "1111111111111111", 123, userInfo, 11f, 3000f);
         
-        bankClient.AddPaymentMethod("Cash", cash);
-        bankClient.AddPaymentMethod("BitCoin", bitCoin);
-        bankClient.AddPaymentMethod("CreditCard", creditCard);
-        bankClient.AddPaymentMethod("DebitCard", debitCard);
-        bankClient.AddPaymentMethod("CashbackCard", cashbackCard);
+        bankClient.AddPaymentMethod(cash);
+        bankClient.AddPaymentMethod(bitCoin);
+        bankClient.AddPaymentMethod(creditCard);
+        bankClient.AddPaymentMethod(debitCard);
+        bankClient.AddPaymentMethod(cashbackCard);
 
         return bankClient;
     }

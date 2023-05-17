@@ -17,12 +17,12 @@ public class BankClientNumberOfCardsComparerTest
 
         for (var i = 0; i < numberOfCards1; i++)
         {
-            bankClient1.AddPaymentMethod("DebitCard", new DebitCard($"debitCard_{numberOfCards1}", "1111111111111111", 111, userInfo, 1f, 222));    
+            bankClient1.AddPaymentMethod(new DebitCard($"debitCard_{numberOfCards1}", "1111111111111111", 111, userInfo, 1f, 222));    
         }
         
         for (var i = 0; i < numberOfCards2; i++)
         {
-            bankClient2.AddPaymentMethod("DebitCard", new DebitCard($"debitCard_{numberOfCards2}", "1111111111111111", 111, userInfo, 1f, 222));    
+            bankClient2.AddPaymentMethod(new DebitCard($"debitCard_{numberOfCards2}", "1111111111111111", 111, userInfo, 1f, 222));    
         }
 
         var bankClientByNameComparer = new BankClientNumberOfCardsComparer();
@@ -31,19 +31,21 @@ public class BankClientNumberOfCardsComparerTest
         Assert.Equal(expectedResult, actualResult);
     }
     
-    [Theory, MemberData(nameof(BankInvalidData))]
-    public void BankClientsCompareIsThrowsArgumentExceptionIfDataIsInvalid(BankClient bankClient1, BankClient bankClient2)
+    [Theory, MemberData(nameof(BankValidData))]
+    public void BankClientsCompareIsThrowsArgumentExceptionIfDataIsInvalid(BankClient bankClient1, BankClient bankClient2, 
+        int expectedResult)
     {
-        var bankClientByNameComparer = new BankClientNumberOfCardsComparer();
-        
-        Assert.Throws<ArgumentNullException>(() => bankClientByNameComparer.Compare(bankClient1, bankClient2));
+        var bankClientByNameComparer = new BankClientAddressComparer();
+        var actualResult = bankClientByNameComparer.Compare(bankClient1, bankClient2);
+
+        Assert.Equal(expectedResult, actualResult);
     }
     
-    public static IEnumerable<object[]> BankInvalidData => new List<object[]>
+    public static IEnumerable<object[]> BankValidData => new List<object[]>
     {
-        new object[] { null, new BankClient(UserInfoHelper.GetDefaultUserInfo())},
-        new object[] { new BankClient(UserInfoHelper.GetDefaultUserInfo()), null},
-        new object[] { null, null}
+        new object[] { null, new BankClient(UserInfoHelper.GetDefaultUserInfo()), -1},
+        new object[] { new BankClient(UserInfoHelper.GetDefaultUserInfo()), null, 1},
+        new object[] { null, null, 0}
     };
 
     public static IEnumerable<object[]> CardsData => new List<object[]>

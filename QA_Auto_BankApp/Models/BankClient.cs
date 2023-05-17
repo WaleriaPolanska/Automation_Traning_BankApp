@@ -1,21 +1,21 @@
 using System.Text;
+
+using QA_Auto_BankApp.Enums;
 using QA_Auto_BankApp.Helpers;
 using QA_Auto_BankApp.Interfaces;
 using QA_Auto_BankApp.Models.BankClientInfo;
+using QA_Auto_BankApp.Models.PaymentMethods;
 
 namespace QA_Auto_BankApp.Models;
 
 public class BankClient
 {
-    private static List<string> _paymentMethodsTypesQueue =
-        new() {"Cash", "CashbackCard", "DebitCard", "CreditCard", "BitCoin"};
-
-    private UserInfo _userInfo;
+    private readonly UserInfo _userInfo;
 
     public UserInfo UserInfo
     {
-        get { return _userInfo; }
-        set
+        get => _userInfo;
+        private init
         {
             if (value == null)
             {
@@ -26,70 +26,63 @@ public class BankClient
         }
     }
 
-    public Dictionary<string, List<IPayment>> PaymentMethodsByName { get; }
+    public Dictionary<PaymentType, List<IPayment>> PaymentMethodsByName { get; }
 
     public BankClient(UserInfo userInfo)
     {
         UserInfo = userInfo;
-        PaymentMethodsByName = new Dictionary<string, List<IPayment>>();
+        PaymentMethodsByName = new Dictionary<PaymentType, List<IPayment>>
+        {
+            {PaymentType.Cash, new List<IPayment>()},
+            {PaymentType.CashbackCard, new List<IPayment>()},
+            {PaymentType.DebitCard, new List<IPayment>()},
+            {PaymentType.CreditCard, new List<IPayment>()},
+            {PaymentType.BitCoin, new List<IPayment>()}
+        };
     }
 
-    public void AddPaymentMethod(string paymentMethodType, IPayment paymentMethod)
+    public void AddPaymentMethod(IPayment paymentMethod)
     {
-        if (!_paymentMethodsTypesQueue.Contains(paymentMethodType))
+        PaymentType? paymentType = paymentMethod switch
         {
-            return;
-        }
+            Cash => PaymentType.Cash,
+            CashbackCard => PaymentType.CashbackCard,
+            DebitCard => PaymentType.DebitCard,
+            CreditCard => PaymentType.CreditCard,
+            BitCoin => PaymentType.BitCoin,
+            _ => null
+        };
 
-        if (!PaymentMethodsByName.ContainsKey(paymentMethodType))
+        if (paymentType.HasValue)
         {
-            PaymentMethodsByName.Add(paymentMethodType, new List<IPayment>());
+            PaymentMethodsByName[paymentType.Value].Add(paymentMethod);   
         }
-
-        PaymentMethodsByName[paymentMethodType].Add(paymentMethod);
     }
 
-    public void TopUpPaymentMethod(string paymentMethodType, string name, float amount)
+    public void TopUpPaymentMethod(PaymentType paymentType, string name, float amount)
     {
-        if (PaymentMethodsByName.ContainsKey(paymentMethodType))
-        {
-            var paymentMethods = PaymentMethodsByName[paymentMethodType];
-            var paymentMethod = paymentMethods.FirstOrDefault(x => x.Name == name);
+        var paymentMethods = PaymentMethodsByName[paymentType];
+        var paymentMethod = paymentMethods.FirstOrDefault(x => x.Name == name);
 
-            paymentMethod?.TopUp(amount);
-        }
+        paymentMethod?.TopUp(amount);
     }
 
     public bool Pay(float sum)
     {
-        foreach (var paymentMethodType in _paymentMethodsTypesQueue)
+        foreach (var paymentMethodType in PaymentMethodsByName.Keys)
         {
-            if (PaymentMethodsByName.ContainsKey(paymentMethodType))
-            {
-                var paymentMethods = PaymentMethodsByName[paymentMethodType];
+            var paymentMethods = PaymentMethodsByName[paymentMethodType];
 
-                foreach (var paymentMethod in paymentMethods)
+            foreach (var paymentMethod in paymentMethods)
+            {
+                if (paymentMethod.MakePayment(sum))
                 {
-                    if (paymentMethod.MakePayment(sum))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
         }
 
         return false;
-    }
-
-    public void OutputBalances()
-    {
-        foreach (var (_, paymentMethods) in PaymentMethodsByName)
-        {
-            foreach (var paymentMethod in paymentMethods)
-            {
-                Console.WriteLine($"{paymentMethod.Name} - {paymentMethod.GetBalance()}");
-            }
-        }
     }
 
     private string GetBalancesAsString()
@@ -107,10 +100,7 @@ public class BankClient
         return sb.ToString();
     }
 
-    public override string ToString()
-    {
-        return $"{UserInfo}\n{GetBalancesAsString()}\n";
-    }
+    public override string ToString() => $"{UserInfo}\n{GetBalancesAsString()}\n";
 
     public override bool Equals(object? obj)
     {
@@ -127,8 +117,5 @@ public class BankClient
         return false;
     }
 
-    public override int GetHashCode()
-    {
-        return UserInfo.GetHashCode();
-    }
+    public override int GetHashCode() => HashCode.Combine(UserInfo.GetHashCode(), PaymentMethodsByName.GetHashCode());
 }

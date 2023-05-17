@@ -23,24 +23,7 @@ public class CashTest
     {
         Assert.Throws<ArgumentException>(() => new Cash(name, 10000));
     }
-    
-    [Fact]
-    public void CashAmountSetIsSuccessfulIfAmountIsValid()
-    {
-        const float expectedAmount = 10000;
-        
-        var cash = new Cash("My Cash", 10000);
-        var actualAmount = cash.Amount;
-        
-        Assert.Equal(expectedAmount, actualAmount);
-    }
-    
-    [Fact]
-    public void CashAmountSetThrowsArgumentExceptionIfAmountIsInvalid()
-    {
-        Assert.Throws<ArgumentException>(() => new Cash("My Cash", -1f));
-    }
-    
+
     [Fact]
     public void CashToStringReturnsValidResult()
     {

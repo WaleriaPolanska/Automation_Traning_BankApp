@@ -7,11 +7,10 @@ namespace QA_Auto_BankApp.Models.PaymentMethods;
 public class CashbackCard : PaymentCard
 {
     private float _interest;
-    private float _balance;
 
     public float Interest
     {
-        get { return _interest; }
+        get => _interest;
         set
         {
             if (value < 0)
@@ -23,32 +22,15 @@ public class CashbackCard : PaymentCard
         }
     }
 
-    public float Balance
-    {
-        get { return _balance; }
-        set
-        {
-            if (value < 0)
-            {
-                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("Balance"), nameof(value));
-            }
-
-            _balance = value;
-        }
-    }
-    
     public CashbackCard(string nameOfPaymentMethod, string numberOfCard, int codeCVV, UserInfo userInfo, float
-        interest,
-        float balance) : base(nameOfPaymentMethod, numberOfCard, codeCVV, userInfo)
-
+        interest, float balance) : base(nameOfPaymentMethod, numberOfCard, codeCVV, userInfo, balance)
     {
         Interest = interest;
-        Balance = balance;
     }
 
     public override bool MakePayment(float sum)
     {
-        if (IPayment.IsCanPay(sum, Balance))
+        if (PaymentHelper.IsCanPay(sum, Balance))
         {
             Balance = (Balance - sum) + sum * Interest / 100F;
 
@@ -58,18 +40,9 @@ public class CashbackCard : PaymentCard
         return false;
     }
 
-    public override void TopUp(float amount)
-    {
-        Balance += amount;
-    }
+    public override void TopUp(float amount) => Balance += amount;
 
-    public override float GetBalance()
-    {
-        return Balance;
-    }
+    public override float GetBalance() => Balance;
 
-    public override string ToString()
-    {
-        return $"    CASHBACK CARD\n{base.ToString()}Balance: {Balance}\nInterest: {Interest}%";
-    }
+    public override string ToString() => $"    CASHBACK CARD\n{base.ToString()}Balance: {Balance}\nInterest: {Interest}%";
 }

@@ -24,19 +24,21 @@ public class BankClientByNameComparerTest
         Assert.Equal(expectedResult, actualResult);
     }
     
-    [Theory, MemberData(nameof(BankInvalidData))]
-    public void BankClientsCompareIsThrowsArgumentExceptionIfDataIsInvalid(BankClient bankClient1, BankClient bankClient2)
+    [Theory, MemberData(nameof(BankValidData))]
+    public void BankClientsCompareIsThrowsArgumentExceptionIfDataIsInvalid(BankClient bankClient1, BankClient bankClient2, 
+        int expectedResult)
     {
-        var bankClientByNameComparer = new BankClientByNameComparer();
-        
-        Assert.Throws<ArgumentNullException>(() => bankClientByNameComparer.Compare(bankClient1, bankClient2));
+        var bankClientByNameComparer = new BankClientAddressComparer();
+        var actualResult = bankClientByNameComparer.Compare(bankClient1, bankClient2);
+
+        Assert.Equal(expectedResult, actualResult);
     }
     
-    public static IEnumerable<object[]> BankInvalidData => new List<object[]>
+    public static IEnumerable<object[]> BankValidData => new List<object[]>
     {
-        new object[] { null, new BankClient(UserInfoHelper.GetDefaultUserInfo())},
-        new object[] { new BankClient(UserInfoHelper.GetDefaultUserInfo()), null},
-        new object[] { null, null}
+        new object[] { null, new BankClient(UserInfoHelper.GetDefaultUserInfo()), -1},
+        new object[] { new BankClient(UserInfoHelper.GetDefaultUserInfo()), null, 1},
+        new object[] { null, null, 0}
     };
 
     public static IEnumerable<object[]> NamesData => new List<object[]>

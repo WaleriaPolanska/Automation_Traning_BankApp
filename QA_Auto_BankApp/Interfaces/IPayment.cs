@@ -9,9 +9,4 @@ public interface IPayment
     public void TopUp(float amount);
 
     public float GetBalance();
-    
-    public static bool IsCanPay(float amount, float availableFunds)
-    {
-        return availableFunds >= amount;
-    }
 }

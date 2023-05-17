@@ -1,4 +1,5 @@
 ﻿using QA_Auto_BankApp.Comparers;
+using QA_Auto_BankApp.Enums;
 using QA_Auto_BankApp.Models;
 using QA_Auto_BankApp.Models.BankClientInfo;
 using QA_Auto_BankApp.Models.PaymentMethods;
@@ -9,13 +10,13 @@ namespace QA_Auto_BankApp
     {
         public static void Main(string[] args)
         {
-            UserInfo userInfo1 = new UserInfo("Jan", "Kowalski", new Address("Lesnaya",
+            var userInfo1 = new UserInfo("Jan", "Kowalski", new Address("Lesnaya",
                 11101, "Warsaw", "Poland", 49, 209), "+48555555555");
 
-            UserInfo userInfo2 = new UserInfo("Marusia", "Lutshaya", new Address("Solnyechnaya",
+            var userInfo2 = new UserInfo("Marusia", "Lutshaya", new Address("Solnyechnaya",
                 11102, "Minsk", "Belarus", 9, 19), "+48555555551");
 
-            UserInfo userInfo3 = new UserInfo("Jon", "Kristos", new Address("Kalashki",
+            var userInfo3 = new UserInfo("Jon", "Kristos", new Address("Kalashki",
                 11103, "Vilnus", "Latvia", 45, 59), "+48555555552");
 
             var paymentMethod1 = new DebitCard("DebitCard1", "0000000000000000",
@@ -45,27 +46,27 @@ namespace QA_Auto_BankApp
             var paymentMethod14 = new Cash("Cash", 100);
             var paymentMethod15 = new BitCoin("BTC", 20000, 0.3f);
 
-            BankClient bankClient1 = new BankClient(userInfo1);
-            BankClient bankClient2 = new BankClient(userInfo2);
-            BankClient bankClient3 = new BankClient(userInfo3);
+            var bankClient1 = new BankClient(userInfo1);
+            var bankClient2 = new BankClient(userInfo2);
+            var bankClient3 = new BankClient(userInfo3);
 
-            bankClient1.AddPaymentMethod("DebitCard", paymentMethod1);
-            bankClient1.AddPaymentMethod("CreditCard", paymentMethod2);
-            bankClient1.AddPaymentMethod("CashbackCard", paymentMethod3);
-            bankClient1.AddPaymentMethod("Cash", paymentMethod4);
-            bankClient1.AddPaymentMethod("BitCoin", paymentMethod5);
+            bankClient1.AddPaymentMethod(paymentMethod1);
+            bankClient1.AddPaymentMethod(paymentMethod2);
+            bankClient1.AddPaymentMethod(paymentMethod3);
+            bankClient1.AddPaymentMethod(paymentMethod4);
+            bankClient1.AddPaymentMethod(paymentMethod5);
 
-            bankClient2.AddPaymentMethod("DebitCard", paymentMethod6);
-            bankClient2.AddPaymentMethod("CreditCard", paymentMethod7);
-            bankClient2.AddPaymentMethod("CashbackCard", paymentMethod8);
-            bankClient2.AddPaymentMethod("Cash", paymentMethod9);
-            bankClient2.AddPaymentMethod("BitCoin", paymentMethod10);
+            bankClient2.AddPaymentMethod(paymentMethod6);
+            bankClient2.AddPaymentMethod(paymentMethod7);
+            bankClient2.AddPaymentMethod(paymentMethod8);
+            bankClient2.AddPaymentMethod(paymentMethod9);
+            bankClient2.AddPaymentMethod(paymentMethod10);
 
-            bankClient3.AddPaymentMethod("DebitCard", paymentMethod11);
-            bankClient3.AddPaymentMethod("CreditCard", paymentMethod12);
-            bankClient3.AddPaymentMethod("CashbackCard", paymentMethod13);
-            bankClient3.AddPaymentMethod("Cash", paymentMethod14);
-            bankClient3.AddPaymentMethod("BitCoin", paymentMethod15);
+            bankClient3.AddPaymentMethod(paymentMethod11);
+            bankClient3.AddPaymentMethod(paymentMethod12);
+            bankClient3.AddPaymentMethod(paymentMethod13);
+            bankClient3.AddPaymentMethod(paymentMethod14);
+            bankClient3.AddPaymentMethod(paymentMethod15);
 
             var bankClients = new List<BankClient>
             {
@@ -85,28 +86,12 @@ namespace QA_Auto_BankApp
                     .Sum(paymentMethod => paymentMethod.GetBalance()))).ToList();
 
             var sortedBankClientsNumberOfCards = bankClients.OrderBy(x =>
-                x.PaymentMethodsByName.Keys.Where(key => key is "DebitCard" or "CreditCard" or "CashbackCard")
+                x.PaymentMethodsByName.Keys.Where(key =>
+                        key is PaymentType.DebitCard or PaymentType.CreditCard or PaymentType.CashbackCard)
                     .Sum(key => x.PaymentMethodsByName[key].Count)).ToList();
 
             var sortedBankClientMaxAmountOnOnePayMethod = bankClients.OrderBy(x =>
-            {
-                var max = 0f;
-
-                foreach (var key in x.PaymentMethodsByName.Keys)
-                {
-                    foreach (var paymentMethod in x.PaymentMethodsByName[key])
-                    {
-                        var balance = paymentMethod.GetBalance();
-
-                        if (max < balance)
-                        {
-                            max = balance;
-                        }
-                    }
-                }
-
-                return max;
-            }).ToList();
+                x.PaymentMethodsByName.Values.SelectMany(y => y).Select(y => y.GetBalance()).Max()).ToList();
 
             foreach (var client in bankClients)
             {
@@ -120,9 +105,9 @@ namespace QA_Auto_BankApp
             var bankClient4 = new BankClient(userInfo4);
             var bankClient5 = new BankClient(userInfo5);
 
-            bankClient4.AddPaymentMethod("BitCoin", new BitCoin("My BTC", 30000, 0.5f));
-            bankClient5.AddPaymentMethod("DebitCard", new DebitCard("My Card", "4444444444444444", 333, userInfo5, 0, 10000f));
-            bankClient5.AddPaymentMethod("Cash", new Cash("Cash", 5000f));
+            bankClient4.AddPaymentMethod(new BitCoin("My BTC", 30000, 0.5f));
+            bankClient5.AddPaymentMethod(new DebitCard("My Card", "4444444444444444", 333, userInfo5, 0, 10000f));
+            bankClient5.AddPaymentMethod(new Cash("Cash", 5000f));
 
             Console.WriteLine(bankClient4.Equals(bankClient5));
         }

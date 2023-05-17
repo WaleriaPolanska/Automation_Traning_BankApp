@@ -9,7 +9,7 @@ public class Product
 
     public string Name
     {
-        get { return _name; }
+        get => _name;
         set
         {
             if (string.IsNullOrEmpty(value) || value.Length > 50)
@@ -23,7 +23,7 @@ public class Product
     
     public float Price
     {
-        get { return _price; }
+        get => _price;
         set
         {
             if (value < 0)

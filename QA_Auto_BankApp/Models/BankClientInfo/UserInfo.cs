@@ -11,7 +11,7 @@ public class UserInfo
     
     public string Name
     {
-        get { return _name; }
+        get => _name;
         set
         {
             if (string.IsNullOrEmpty(value) || value.Length > 50)
@@ -25,7 +25,7 @@ public class UserInfo
 
     public string LastName
     {
-        get { return _lastName; }
+        get => _lastName;
         set
         {
             if (string.IsNullOrEmpty(value) || value.Length > 50)
@@ -39,7 +39,7 @@ public class UserInfo
 
     public Address Address
     {
-        get { return _address; }
+        get => _address;
         set
         {
             if (value == null)
@@ -53,7 +53,7 @@ public class UserInfo
 
     public string Phone
     {
-        get { return _phone;}
+        get => _phone;
         set
         {
             if (string.IsNullOrEmpty(value) || value.Length != 12)
@@ -73,10 +73,7 @@ public class UserInfo
         Phone = userPhone;
     }
 
-    public override string ToString()
-    {
-        return $"{Name} {LastName}\n{Address}\nPhone: {Phone}";
-    }
+    public override string ToString() => $"{Name} {LastName}\n{Address}\nPhone: {Phone}";
 
     public override bool Equals(object? obj)
     {
@@ -89,8 +86,5 @@ public class UserInfo
         return false;
     }
     
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, LastName, Phone, Address.GetHashCode());
-    }
+    public override int GetHashCode() => HashCode.Combine(Name, LastName, Phone, Address.GetHashCode());
 }

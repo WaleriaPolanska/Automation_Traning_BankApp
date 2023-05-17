@@ -7,11 +7,10 @@ namespace QA_Auto_BankApp.Models.PaymentMethods;
 public class CreditCard : PaymentCard
 {
     private float _creditPercentage;
-    private float _creditLimit;
 
     public float CreditPercentage
     {
-        get { return _creditPercentage; }
+        get => _creditPercentage;
         set
         {
             if (value < 0)
@@ -23,35 +22,19 @@ public class CreditCard : PaymentCard
         }
     }
 
-    public float CreditLimit
-    {
-        get { return _creditLimit; }
-        set
-        {
-            if (value < 0)
-            {
-                throw new ArgumentException(ExceptionHelper.GetInvalidParameterMessage("CreditLimit"), nameof(value));
-            }
-
-            _creditLimit = value;
-        }
-    }
-    
     public CreditCard(string nameOfPaymentMethod, string numberOfCard, int codeCVV, UserInfo userInfo,
-        float creditPercentage,
-        float creditLimit) : base(nameOfPaymentMethod, numberOfCard, codeCVV, userInfo)
+        float creditPercentage, float balance) : base(nameOfPaymentMethod, numberOfCard, codeCVV, userInfo, balance)
     {
         CreditPercentage = creditPercentage;
-        CreditLimit = creditLimit;
     }
 
     public override bool MakePayment(float sum)
     {
-        float sumWithPercentage = sum + (sum * CreditPercentage) / 100F;
+        var sumWithPercentage = sum + (sum * CreditPercentage) / 100F;
         
-        if (IPayment.IsCanPay(sumWithPercentage, CreditLimit))
+        if (PaymentHelper.IsCanPay(sumWithPercentage, Balance))
         {
-            CreditLimit -= sumWithPercentage;
+            Balance -= sumWithPercentage;
 
             return true;
         }
@@ -59,18 +42,9 @@ public class CreditCard : PaymentCard
         return false;
     }
 
-    public override void TopUp(float amount)
-    {
-        CreditLimit += amount;
-    }
+    public override void TopUp(float amount) => Balance += amount;
 
-    public override float GetBalance()
-    {
-        return CreditLimit;
-    }
+    public override float GetBalance() => Balance;
 
-    public override string ToString()
-    {
-        return $"    CREDIT CARD\n{base.ToString()}CreditLimit: {CreditLimit}\nCreditPercentage: {CreditPercentage}%";
-    }
+    public override string ToString() => $"    CREDIT CARD\n{base.ToString()}CreditLimit: {Balance}\nCreditPercentage: {CreditPercentage}%";
 }

@@ -4,7 +4,7 @@ using QA_Auto_BankApp.Models.BankClientInfo;
 
 namespace QA_Auto_BankApp.Models.PaymentMethods;
 
-public abstract class PaymentCard : IPayment
+public abstract class PaymentCard : PaymentMethod, IPayment
 {
     private string _name;
     private string _cardNumber;
@@ -15,7 +15,7 @@ public abstract class PaymentCard : IPayment
 
     public string Name
     {
-        get { return _name; }
+        get => _name;
         set
         {
             if (string.IsNullOrEmpty(value) || value.Length > 20)
@@ -29,8 +29,8 @@ public abstract class PaymentCard : IPayment
 
     public string CardNumber
     {
-        get { return _cardNumber; }
-        set
+        get => _cardNumber;
+        private init
         {
             if (string.IsNullOrEmpty(value) || value.Length != 16)
             {
@@ -43,8 +43,8 @@ public abstract class PaymentCard : IPayment
 
     public int CVV
     {
-        get { return _cvv; }
-        set
+        get => _cvv;
+        private init
         {
             if (value.ToString().Length != 3)
             {
@@ -57,19 +57,20 @@ public abstract class PaymentCard : IPayment
 
     public UserInfo UserInfo
     {
-        get { return _userInfo; }
-        set
+        get => _userInfo;
+        private init
         {
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value), ExceptionHelper.GetInvalidParameterMessage("Expiration date"));
+                throw new ArgumentNullException(nameof(value),
+                    ExceptionHelper.GetInvalidParameterMessage("Expiration date"));
             }
 
             _userInfo = value;
         }
     }
 
-    public PaymentCard(string nameOfPaymentMethod, string numberOfCard, int codeCVV, UserInfo userInfo)
+    public PaymentCard(string nameOfPaymentMethod, string numberOfCard, int codeCVV, UserInfo userInfo, float balance) : base(balance)
     {
         Name = nameOfPaymentMethod;
         CardNumber = numberOfCard;
@@ -85,20 +86,6 @@ public abstract class PaymentCard : IPayment
 
     public abstract float GetBalance();
 
-    public override string ToString()
-    {
-        return $"Name: {Name}\nClient Name: {_clientName}\nCard Number: {CardNumber}\nExpiration Date: {_expirationDate}\nCVV: {CVV}\n";
-    }
-
-    public void GetCardInfo(string cardInfo)
-    {
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Payment Method: {Name}");
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine(cardInfo);
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("User info:");
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine($"{UserInfo}\n\n");
-    }
+    public override string ToString() =>
+        $"Name: {Name}\nClient Name: {_clientName}\nCard Number: {CardNumber}\nExpiration Date: {_expirationDate}\nCVV: {CVV}\n";
 }

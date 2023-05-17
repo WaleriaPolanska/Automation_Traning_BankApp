@@ -1,3 +1,4 @@
+using QA_Auto_BankApp.Enums;
 using QA_Auto_BankApp.Models;
 
 namespace QA_Auto_BankApp.Comparers;
@@ -6,9 +7,19 @@ public class BankClientNumberOfCardsComparer : IComparer<BankClient>
 {
     public int Compare(BankClient? x, BankClient? y)
     {
-        if (x is null || y is null)
+        if (x is null)
         {
-            throw new ArgumentNullException();
+            if (y is null)
+            {
+                return 0;
+            }
+            
+            return -1;
+        }
+        
+        if (y is null)
+        {
+            return 1;
         }
 
         var xBankClientCountOfCards = 0;
@@ -16,7 +27,7 @@ public class BankClientNumberOfCardsComparer : IComparer<BankClient>
 
         foreach (var key in x.PaymentMethodsByName.Keys)
         {
-            if (key is "DebitCard" or "CreditCard" or "CashbackCard")
+            if (key is PaymentType.DebitCard or PaymentType.CreditCard or PaymentType.CashbackCard)
             {
                 xBankClientCountOfCards += x.PaymentMethodsByName[key].Count;
             }
@@ -24,7 +35,7 @@ public class BankClientNumberOfCardsComparer : IComparer<BankClient>
 
         foreach (var key in y.PaymentMethodsByName.Keys)
         {
-            if (key is "DebitCard" or "CreditCard" or "CashbackCard")
+            if (key is PaymentType.DebitCard or PaymentType.CreditCard or PaymentType.CashbackCard)
             {
                 yBankClientCountOfCards += y.PaymentMethodsByName[key].Count;
             }

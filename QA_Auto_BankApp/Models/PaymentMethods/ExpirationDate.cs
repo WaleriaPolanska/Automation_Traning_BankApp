@@ -13,13 +13,7 @@ public class ExpirationDate
         _year = expirationDate.Year;
     }
 
-    private static DateTime GetCardExpirationDate()
-    {
-        return DateTime.Now.AddYears(4);
-    }
+    private static DateTime GetCardExpirationDate() => DateTime.Now.AddYears(4);
 
-    public override string ToString()
-    {
-        return $"{_month}/{_year}";
-    }
+    public override string ToString() => $"{_month}/{_year}";
 }

@@ -4,8 +4,5 @@ public static class ExceptionHelper
 {
     private const string ErrorMessage = "{0} is invalid";
 
-    public static string GetInvalidParameterMessage(string parameterName)
-    {
-        return string.Format(ErrorMessage, parameterName);
-    }
+    public static string GetInvalidParameterMessage(string parameterName) => string.Format(ErrorMessage, parameterName);
 }
