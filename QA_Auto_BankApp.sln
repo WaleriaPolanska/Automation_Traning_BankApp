@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QA_Auto_BankApp", "QA_Auto_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{6389007F-25F1-479B-9CAE-EB097B7D7126}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumTests", "SeleniumTests\SeleniumTests.csproj", "{0A0DBD75-9FA9-4649-8699-CC35459E9927}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{6389007F-25F1-479B-9CAE-EB097B7D7126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6389007F-25F1-479B-9CAE-EB097B7D7126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6389007F-25F1-479B-9CAE-EB097B7D7126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A0DBD75-9FA9-4649-8699-CC35459E9927}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A0DBD75-9FA9-4649-8699-CC35459E9927}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A0DBD75-9FA9-4649-8699-CC35459E9927}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A0DBD75-9FA9-4649-8699-CC35459E9927}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
